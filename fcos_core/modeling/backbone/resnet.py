@@ -62,14 +62,21 @@ ResNet101FPNStagesTo5 = tuple(
 class ResNet(nn.Module):
     def __init__(self, cfg):
         super(ResNet, self).__init__()
-
-        # If we want to use the cfg in forward(), then we should make a copy
-        # of it and store it for later use:
-        # self.cfg = cfg.clone()
-
-        # Translate string names to implementations
+        # stem: first layer
         stem_module = _STEM_MODULES[cfg.MODEL.RESNETS.STEM_FUNC]
+        # stages
+        """
+        StageSpec = namedtuple(
+            "StageSpec",
+            [
+                "index",  # Index of the stage, eg 1, 2, ..,. 5
+                "block_count",  # Number of residual blocks in the stage
+                "return_features",  # True => return the last feature map from this stage
+            ],
+        )
+        """
         stage_specs = _STAGE_SPECS[cfg.MODEL.BACKBONE.CONV_BODY]
+        # Bottleneck
         transformation_module = _TRANSFORMATION_MODULES[cfg.MODEL.RESNETS.TRANS_FUNC]
 
         # Construct the stem module
@@ -83,12 +90,17 @@ class ResNet(nn.Module):
         stage2_out_channels = cfg.MODEL.RESNETS.RES2_OUT_CHANNELS
         self.stages = []
         self.return_features = {}
+        
+        # construct every Bottleneck layer
         for stage_spec in stage_specs:
             name = "layer" + str(stage_spec.index)
             stage2_relative_factor = 2 ** (stage_spec.index - 1)
+            
             bottleneck_channels = stage2_bottleneck_channels * stage2_relative_factor
+            
             out_channels = stage2_out_channels * stage2_relative_factor
             stage_with_dcn = cfg.MODEL.RESNETS.STAGE_WITH_DCN[stage_spec.index - 1]
+            # specified resnet Bottleneck
             module = _make_stage(
                 transformation_module,
                 in_channels,
@@ -111,6 +123,8 @@ class ResNet(nn.Module):
 
         # Fusion the data in the first stage, because of the sparse of radar image
         # Add radar stem and block
+        
+        # if only detect with image
         if cfg.MODEL.BACKBONE.FUSION == "IMG":
             self.ra_stem = None
             self.ra_block = None
@@ -160,13 +174,18 @@ class ResNet(nn.Module):
 
     def fusion_forward(self, im_x, ra_x):
         outputs = []
+        # extract image features
         im_x = self.stem(im_x)
+        # extract radar features
         ra_x = self.ra_stem(ra_x)
         ra_x = self.ra_block(ra_x)
+        # fusion branch
         for index, stage_name in enumerate(self.stages):
             im_x = getattr(self, stage_name)(im_x)
+            # fused image and radar feature at first
             if index == 0:
                 im_x = self.fusion(im_x, ra_x)
+            # get multi-level fpn output features
             if self.return_features[stage_name]:
                 outputs.append(im_x)
         return outputs
@@ -287,7 +306,8 @@ class Bottleneck(nn.Module):
             dcn_config
     ):
         super(Bottleneck, self).__init__()
-
+        
+        # default
         self.downsample = None
         if in_channels != out_channels:
             down_stride = stride if dilation == 1 else 1
@@ -298,6 +318,7 @@ class Bottleneck(nn.Module):
                 ),
                 norm_func(out_channels),
             )
+            # initialize downsample weights
             for modules in [self.downsample, ]:
                 for l in modules.modules():
                     if isinstance(l, Conv2d):
@@ -372,6 +393,7 @@ class Bottleneck(nn.Module):
         out0 = self.conv3(out)
         out = self.bn3(out0)
 
+        # if downsample layer
         if self.downsample is not None:
             identity = self.downsample(x)
 

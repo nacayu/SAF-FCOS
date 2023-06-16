@@ -118,7 +118,7 @@ def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
         "--config-file",
-        default="",
+        default="configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml",
         metavar="FILE",
         help="path to config file",
         type=str,

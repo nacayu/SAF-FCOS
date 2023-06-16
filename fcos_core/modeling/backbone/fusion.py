@@ -131,7 +131,7 @@ class FusionAtt7X7(nn.Module):
         x = torch.mul(im_x, ra_x)
         return x
 
-
+#
 class FusionAttMix(nn.Module):
     def __init__(self, input_channels, cfg):
         super(FusionAttMix, self).__init__()

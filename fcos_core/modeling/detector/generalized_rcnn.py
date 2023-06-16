@@ -24,7 +24,9 @@ class GeneralizedRCNN(nn.Module):
     def __init__(self, cfg):
         super(GeneralizedRCNN, self).__init__()
         self.backbone = build_backbone(cfg)
+        # get first stage RPN proposals
         self.rpn = build_rpn(cfg, self.backbone.out_channels)
+        # two-stage method: extract proposal features to refine
         self.roi_heads = build_roi_heads(cfg, self.backbone.out_channels)
 
     def forward(self, images, pc_images, targets=None):
