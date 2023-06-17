@@ -3,6 +3,10 @@
 
 The full paper is available at: [https://www.mdpi.com/1424-8220/20/4/956](https://www.mdpi.com/1424-8220/20/4/956).
 
+## Arch
+![Alt text](image/architecture.png)
+![Alt text](image/fpn.png)
+
 ## You should known
 
 Please read the FCOS project first [FCOS-README.md](FCOS-README.md)

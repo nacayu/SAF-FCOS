@@ -23,6 +23,8 @@ class FPN(nn.Module):
                 FPN output, and the result will extend the result list
         """
         super(FPN, self).__init__()
+        # 内部卷积块（inner_block）和层级卷积块（layer_block）
+        # 内部卷积块用于将输入特征图通道数转换为指定的输出通道数，而层级卷积块则用于进一步处理特征金字塔的特征
         self.inner_blocks = []
         self.layer_blocks = []
         for idx, in_channels in enumerate(in_channels_list, 1):
@@ -31,7 +33,9 @@ class FPN(nn.Module):
 
             if in_channels == 0:
                 continue
+            # 1x1 conv: feature transform
             inner_block_module = conv_block(in_channels, out_channels, 1)
+            # 3x3 conv: get each level final output
             layer_block_module = conv_block(out_channels, out_channels, 3, 1)
             self.add_module(inner_block, inner_block_module)
             self.add_module(layer_block, layer_block_module)
@@ -47,9 +51,11 @@ class FPN(nn.Module):
             results (tuple[Tensor]): feature maps after FPN layers.
                 They are ordered from highest resolution first.
         """
+        # get initial top level features
         last_inner = getattr(self, self.inner_blocks[-1])(x[-1])
         results = []
         results.append(getattr(self, self.layer_blocks[-1])(last_inner))
+        # from last to firs
         for feature, inner_block, layer_block in zip(
                 x[:-1][::-1], self.inner_blocks[:-1][::-1], self.layer_blocks[:-1][::-1]
         ):
@@ -58,11 +64,12 @@ class FPN(nn.Module):
             inner_top_down = F.interpolate(last_inner, scale_factor=2, mode="nearest")
             inner_lateral = getattr(self, inner_block)(feature)
             # TODO use size instead of scale to make it robust to different sizes
-            # inner_top_down = F.upsample(last_inner, size=inner_lateral.shape[-2:],
-            # mode='bilinear', align_corners=False)
+            # inner_top_down = F.upsample(last_inner, size=inner_lateral.shape[-2:], mode='bilinear', align_corners=False)
+            
+            # update last_inner
             last_inner = inner_lateral + inner_top_down
             results.insert(0, getattr(self, layer_block)(last_inner))
-
+        # get p6, p7 features from p5
         if isinstance(self.top_blocks, LastLevelP6P7):
             last_results = self.top_blocks(x[-1], results[-1])
             results.extend(last_results)

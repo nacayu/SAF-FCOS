@@ -131,8 +131,12 @@ class FusionAtt7X7(nn.Module):
         x = torch.mul(im_x, ra_x)
         return x
 
-#
 class FusionAttMix(nn.Module):
+    """
+    input: im_x: [bs, c1, h1, w1], ra_x: [bs, c2, h2, w2]
+    intermediate variable: raw_x: [bs, 1, h1, w1]
+    output: x: [bs, c1, h1, w1]
+    """
     def __init__(self, input_channels, cfg):
         super(FusionAttMix, self).__init__()
         self.att = ATTMix(input_channels, 1, cfg.MODEL.BACKBONE.FUSION_MIX_KERNEL_SIZES,

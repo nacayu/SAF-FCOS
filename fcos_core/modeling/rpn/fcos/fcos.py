@@ -18,6 +18,7 @@ class FCOSHead(torch.nn.Module):
         """
         super(FCOSHead, self).__init__()
         # TODO: Implement the sigmoid version first.
+        # num_classes: 2-1 -> 1
         num_classes = cfg.MODEL.FCOS.NUM_CLASSES - 1
         self.fpn_strides = cfg.MODEL.FCOS.FPN_STRIDES
         self.norm_reg_targets = cfg.MODEL.FCOS.NORM_REG_TARGETS
@@ -26,12 +27,15 @@ class FCOSHead(torch.nn.Module):
 
         cls_tower = []
         bbox_tower = []
+        
+        # num convs: 4        
         for i in range(cfg.MODEL.FCOS.NUM_CONVS):
             if self.use_dcn_in_tower and i == cfg.MODEL.FCOS.NUM_CONVS - 1:
                 conv_func = DFConv2d
             else:
                 conv_func = nn.Conv2d
-
+            
+            # cls: [conv, groupnorm, relu]
             cls_tower.append(
                 conv_func(
                     in_channels,
@@ -44,6 +48,7 @@ class FCOSHead(torch.nn.Module):
             )
             cls_tower.append(nn.GroupNorm(32, in_channels))
             cls_tower.append(nn.ReLU())
+            # bbox: [conv, groupnorm, relu]
             bbox_tower.append(
                 conv_func(
                     in_channels,
@@ -59,6 +64,8 @@ class FCOSHead(torch.nn.Module):
 
         self.add_module('cls_tower', nn.Sequential(*cls_tower))
         self.add_module('bbox_tower', nn.Sequential(*bbox_tower))
+        
+        # get cls, bbox, centerness prediction
         self.cls_logits = nn.Conv2d(
             in_channels, num_classes, kernel_size=3, stride=1,
             padding=1
@@ -92,17 +99,20 @@ class FCOSHead(torch.nn.Module):
         logits = []
         bbox_reg = []
         centerness = []
+        # shared Decoder layer: get preds from fpn features x(tuple)
         for l, feature in enumerate(x):
+            # get cls, bbox features
             cls_tower = self.cls_tower(feature)
             box_tower = self.bbox_tower(feature)
-
+            # get class logits
             logits.append(self.cls_logits(cls_tower))
+            # get centerness
             if self.centerness_on_reg:
                 centerness.append(self.centerness(box_tower))
             else:
                 centerness.append(self.centerness(cls_tower))
-
-            bbox_pred = self.scales[l](self.bbox_pred(box_tower))
+            # get bbox preds
+            bbox_pred = self.scales[l](self.bbox_pred(box_tower))       # self.scales: box_tower * self.scale
             if self.norm_reg_targets:
                 bbox_pred = F.relu(bbox_pred)
                 if self.training:

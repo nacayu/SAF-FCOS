@@ -64,21 +64,10 @@ class ResNet(nn.Module):
         super(ResNet, self).__init__()
         # stem: first layer
         stem_module = _STEM_MODULES[cfg.MODEL.RESNETS.STEM_FUNC]
-        # stages
-        """
-        StageSpec = namedtuple(
-            "StageSpec",
-            [
-                "index",  # Index of the stage, eg 1, 2, ..,. 5
-                "block_count",  # Number of residual blocks in the stage
-                "return_features",  # True => return the last feature map from this stage
-            ],
-        )
-        """
+        # stages parameters used for Bottleneck
         stage_specs = _STAGE_SPECS[cfg.MODEL.BACKBONE.CONV_BODY]
         # Bottleneck
         transformation_module = _TRANSFORMATION_MODULES[cfg.MODEL.RESNETS.TRANS_FUNC]
-
         # Construct the stem module
         self.stem = stem_module(cfg)
 
@@ -91,7 +80,7 @@ class ResNet(nn.Module):
         self.stages = []
         self.return_features = {}
         
-        # construct every Bottleneck layer
+        # construct every Bottleneck layer for ResNet image branch
         for stage_spec in stage_specs:
             name = "layer" + str(stage_spec.index)
             stage2_relative_factor = 2 ** (stage_spec.index - 1)
@@ -109,6 +98,7 @@ class ResNet(nn.Module):
                 stage_spec.block_count,
                 num_groups,
                 cfg.MODEL.RESNETS.STRIDE_IN_1X1,
+                # first_stride = 2
                 first_stride=int(stage_spec.index > 1) + 1,
                 dcn_config={
                     "stage_with_dcn": stage_with_dcn,
@@ -121,18 +111,19 @@ class ResNet(nn.Module):
             self.stages.append(name)
             self.return_features[name] = stage_spec.return_features
 
-        # Fusion the data in the first stage, because of the sparse of radar image
-        # Add radar stem and block
+        # construct every Bottleneck layer for ResNet radar branch
         
         # if only detect with image
         if cfg.MODEL.BACKBONE.FUSION == "IMG":
             self.ra_stem = None
             self.ra_block = None
             self.fusion = None
+        # radar branch: one stem layer + one Bottleneck layer
         else:
+            # Stem layer: conv + batchnorm + relu + maxpool
             ra_stem_module = _RA_STEM_MODULES[cfg.MODEL.RESNETS.STEM_FUNC]
             self.ra_stem = ra_stem_module(cfg)
-
+            # Bottleneck layer: modified from ResNet
             ra_transformation_module = _RA_TRANSFORMATION_MODULES[cfg.MODEL.RESNETS.TRANS_FUNC]
             in_channels = cfg.MODEL.RESNETS.STEM_OUT_CHANNELS
             stage2_out_channels = cfg.MODEL.RESNETS.RES2_OUT_CHANNELS
@@ -154,7 +145,8 @@ class ResNet(nn.Module):
                     "with_modulated_dcn": cfg.MODEL.RESNETS.WITH_MODULATED_DCN,
                     "deformable_groups": cfg.MODEL.RESNETS.DEFORMABLE_GROUPS,
                 })
-
+            # choose radar and image features fusion method such as FusionAttMix, ADD, MUL, etc.
+            # FusionAttMix: use multi-kernals to extract radar features and concatenate, then use torch.mul(im_x, ra_x) to generate fusion features
             fusion_model = _FUSION_BLOCKS[cfg.MODEL.BACKBONE.FUSION]
             self.fusion = fusion_model(out_channels, cfg)
 
@@ -203,7 +195,6 @@ class ResNet(nn.Module):
         if self.fusion is None:
             outputs = self.img_forward(xs[0])
         else:
-
             outputs = self.fusion_forward(xs[0], xs[1])
         return outputs
 
@@ -310,6 +301,7 @@ class Bottleneck(nn.Module):
         # default
         self.downsample = None
         if in_channels != out_channels:
+            # down_stride == 2
             down_stride = stride if dilation == 1 else 1
             self.downsample = nn.Sequential(
                 Conv2d(
@@ -340,7 +332,8 @@ class Bottleneck(nn.Module):
             bias=False,
         )
         self.bn1 = norm_func(bottleneck_channels)
-        # TODO: specify init for the above
+        
+        # replace second conv of Bottleneck with DCN
         with_dcn = dcn_config.get("stage_with_dcn", False)
         if with_dcn:
             deformable_groups = dcn_config.get("deformable_groups", 1)
@@ -393,7 +386,7 @@ class Bottleneck(nn.Module):
         out0 = self.conv3(out)
         out = self.bn3(out0)
 
-        # if downsample layer
+        # if downsample layer: 
         if self.downsample is not None:
             identity = self.downsample(x)
 

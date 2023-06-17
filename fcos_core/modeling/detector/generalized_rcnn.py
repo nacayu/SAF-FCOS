@@ -23,6 +23,7 @@ class GeneralizedRCNN(nn.Module):
 
     def __init__(self, cfg):
         super(GeneralizedRCNN, self).__init__()
+        # get multi-level fusion features
         self.backbone = build_backbone(cfg)
         # get first stage RPN proposals
         self.rpn = build_rpn(cfg, self.backbone.out_channels)
