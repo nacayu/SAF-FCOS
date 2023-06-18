@@ -114,6 +114,7 @@ class FCOSHead(torch.nn.Module):
             # get bbox preds
             bbox_pred = self.scales[l](self.bbox_pred(box_tower))       # self.scales: box_tower * self.scale
             if self.norm_reg_targets:
+                # bbox_pred: >= 0
                 bbox_pred = F.relu(bbox_pred)
                 if self.training:
                     bbox_reg.append(bbox_pred)
@@ -159,6 +160,7 @@ class FCOSModule(torch.nn.Module):
                 testing, it is an empty dict.
         """
         box_cls, box_regression, centerness = self.head(features)
+        # compute locations per level
         locations = self.compute_locations(features)
 
         if self.training:
