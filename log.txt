@@ -1,7 +1,7 @@
-2023-06-18 13:53:56,586 fcos_core INFO: Using 1 GPUs
-2023-06-18 13:53:56,586 fcos_core INFO: Namespace(config_file='configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml', distributed=False, local_rank=0, norm_info_folder='/home/naca/Projects/dataset/nuscenes/v1.0-trainval/norm_info/', opts=[], skip_test=False)
-2023-06-18 13:53:56,586 fcos_core INFO: Collecting env info (might take some time)
-2023-06-18 13:54:04,369 fcos_core INFO: 
+2023-06-26 22:29:03,899 fcos_core INFO: Using 1 GPUs
+2023-06-26 22:29:03,900 fcos_core INFO: Namespace(config_file='configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml', distributed=False, local_rank=0, norm_info_folder='/home/naca/Projects/dataset/nuscenes/v1.0-trainval/norm_info/', opts=[], skip_test=False)
+2023-06-26 22:29:03,900 fcos_core INFO: Collecting env info (might take some time)
+2023-06-26 22:29:11,813 fcos_core INFO: 
 PyTorch version: 1.9.1+cu111
 Is debug build: False
 CUDA used to build PyTorch: 11.1
@@ -10,7 +10,7 @@ ROCM used to build PyTorch: N/A
 OS: Ubuntu 20.04.6 LTS (x86_64)
 GCC version: (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
 Clang version: Could not collect
-CMake version: Could not collect
+CMake version: version 3.16.3
 Libc version: glibc-2.31
 
 Python version: 3.8 (64-bit runtime)
@@ -43,8 +43,8 @@ Versions of relevant libraries:
 [conda] torchaudio                0.9.1                    pypi_0    pypi
 [conda] torchvision               0.10.1+cu111             pypi_0    pypi
         Pillow (9.5.0)
-2023-06-18 13:54:04,370 fcos_core INFO: Loaded configuration file configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml
-2023-06-18 13:54:04,370 fcos_core INFO: 
+2023-06-26 22:29:11,813 fcos_core INFO: Loaded configuration file configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml
+2023-06-26 22:29:11,814 fcos_core INFO: 
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
   WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
@@ -82,15 +82,15 @@ INPUT:
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
-  BASE_LR: 0.01
+  BASE_LR: 0.001
   WEIGHT_DECAY: 0.0001
   STEPS: (60000, 80000)
   MAX_ITER: 40000
-  IMS_PER_BATCH: 2
+  IMS_PER_BATCH: 4
   WARMUP_METHOD: "constant"
 
 
-2023-06-18 13:54:04,373 fcos_core INFO: Running with config:
+2023-06-26 22:29:11,817 fcos_core INFO: Running with config:
 DATALOADER:
   ASPECT_RATIO_GROUPING: True
   NUM_WORKERS: 4
@@ -272,12 +272,12 @@ MODEL:
 OUTPUT_DIR: .
 PATHS_CATALOG: /home/naca/Projects/00_class_project/SAF-FCOS/fcos_core/config/paths_catalog.py
 SOLVER:
-  BASE_LR: 0.01
+  BASE_LR: 0.001
   BIAS_LR_FACTOR: 2
   CHECKPOINT_PERIOD: 2500
   DCONV_OFFSETS_LR_FACTOR: 1.0
   GAMMA: 0.1
-  IMS_PER_BATCH: 2
+  IMS_PER_BATCH: 4
   MAX_ITER: 40000
   MOMENTUM: 0.9
   STEPS: (60000, 80000)
@@ -297,383 +297,3 @@ TEST:
   EXPECTED_RESULTS: []
   EXPECTED_RESULTS_SIGMA_TOL: 4
   IMS_PER_BATCH: 8
-2023-06-18 13:54:09,346 fcos_core.utils.checkpoint INFO: Loading checkpoint from catalog://ImageNetPretrained/MSRA/R-50
-2023-06-18 13:54:09,347 fcos_core.utils.checkpoint INFO: catalog://ImageNetPretrained/MSRA/R-50 points to https://dl.fbaipublicfiles.com/detectron/ImageNetPretrained/MSRA/R-50.pkl
-2023-06-18 13:54:09,348 fcos_core.utils.checkpoint INFO: url https://dl.fbaipublicfiles.com/detectron/ImageNetPretrained/MSRA/R-50.pkl cached in /home/naca/.torch/models/R-50.pkl
-2023-06-18 13:54:09,452 fcos_core.utils.c2_model_loading INFO: Remapping C2 weights
-2023-06-18 13:54:09,453 fcos_core.utils.c2_model_loading INFO: C2 name: conv1_b              mapped name: conv1.bias
-2023-06-18 13:54:09,453 fcos_core.utils.c2_model_loading INFO: C2 name: conv1_w              mapped name: conv1.weight
-2023-06-18 13:54:09,453 fcos_core.utils.c2_model_loading INFO: C2 name: fc1000_b             mapped name: fc1000.bias
-2023-06-18 13:54:09,453 fcos_core.utils.c2_model_loading INFO: C2 name: fc1000_w             mapped name: fc1000.weight
-2023-06-18 13:54:09,453 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch1_b     mapped name: layer1.0.downsample.0.bias
-2023-06-18 13:54:09,453 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch1_bn_b  mapped name: layer1.0.downsample.1.bias
-2023-06-18 13:54:09,453 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch1_bn_s  mapped name: layer1.0.downsample.1.weight
-2023-06-18 13:54:09,454 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch1_w     mapped name: layer1.0.downsample.0.weight
-2023-06-18 13:54:09,454 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2a_b    mapped name: layer1.0.conv1.bias
-2023-06-18 13:54:09,454 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2a_bn_b mapped name: layer1.0.bn1.bias
-2023-06-18 13:54:09,454 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2a_bn_s mapped name: layer1.0.bn1.weight
-2023-06-18 13:54:09,454 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2a_w    mapped name: layer1.0.conv1.weight
-2023-06-18 13:54:09,454 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2b_b    mapped name: layer1.0.conv2.bias
-2023-06-18 13:54:09,454 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2b_bn_b mapped name: layer1.0.bn2.bias
-2023-06-18 13:54:09,454 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2b_bn_s mapped name: layer1.0.bn2.weight
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2b_w    mapped name: layer1.0.conv2.weight
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2c_b    mapped name: layer1.0.conv3.bias
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2c_bn_b mapped name: layer1.0.bn3.bias
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2c_bn_s mapped name: layer1.0.bn3.weight
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2c_w    mapped name: layer1.0.conv3.weight
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2a_b    mapped name: layer1.1.conv1.bias
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2a_bn_b mapped name: layer1.1.bn1.bias
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2a_bn_s mapped name: layer1.1.bn1.weight
-2023-06-18 13:54:09,455 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2a_w    mapped name: layer1.1.conv1.weight
-2023-06-18 13:54:09,456 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2b_b    mapped name: layer1.1.conv2.bias
-2023-06-18 13:54:09,456 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2b_bn_b mapped name: layer1.1.bn2.bias
-2023-06-18 13:54:09,456 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2b_bn_s mapped name: layer1.1.bn2.weight
-2023-06-18 13:54:09,456 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2b_w    mapped name: layer1.1.conv2.weight
-2023-06-18 13:54:09,456 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2c_b    mapped name: layer1.1.conv3.bias
-2023-06-18 13:54:09,456 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2c_bn_b mapped name: layer1.1.bn3.bias
-2023-06-18 13:54:09,456 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2c_bn_s mapped name: layer1.1.bn3.weight
-2023-06-18 13:54:09,456 fcos_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2c_w    mapped name: layer1.1.conv3.weight
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2a_b    mapped name: layer1.2.conv1.bias
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2a_bn_b mapped name: layer1.2.bn1.bias
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2a_bn_s mapped name: layer1.2.bn1.weight
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2a_w    mapped name: layer1.2.conv1.weight
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2b_b    mapped name: layer1.2.conv2.bias
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2b_bn_b mapped name: layer1.2.bn2.bias
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2b_bn_s mapped name: layer1.2.bn2.weight
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2b_w    mapped name: layer1.2.conv2.weight
-2023-06-18 13:54:09,457 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2c_b    mapped name: layer1.2.conv3.bias
-2023-06-18 13:54:09,458 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2c_bn_b mapped name: layer1.2.bn3.bias
-2023-06-18 13:54:09,458 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2c_bn_s mapped name: layer1.2.bn3.weight
-2023-06-18 13:54:09,458 fcos_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2c_w    mapped name: layer1.2.conv3.weight
-2023-06-18 13:54:09,458 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch1_b     mapped name: layer2.0.downsample.0.bias
-2023-06-18 13:54:09,458 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch1_bn_b  mapped name: layer2.0.downsample.1.bias
-2023-06-18 13:54:09,458 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch1_bn_s  mapped name: layer2.0.downsample.1.weight
-2023-06-18 13:54:09,458 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch1_w     mapped name: layer2.0.downsample.0.weight
-2023-06-18 13:54:09,458 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2a_b    mapped name: layer2.0.conv1.bias
-2023-06-18 13:54:09,459 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2a_bn_b mapped name: layer2.0.bn1.bias
-2023-06-18 13:54:09,459 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2a_bn_s mapped name: layer2.0.bn1.weight
-2023-06-18 13:54:09,459 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2a_w    mapped name: layer2.0.conv1.weight
-2023-06-18 13:54:09,459 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2b_b    mapped name: layer2.0.conv2.bias
-2023-06-18 13:54:09,459 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2b_bn_b mapped name: layer2.0.bn2.bias
-2023-06-18 13:54:09,459 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2b_bn_s mapped name: layer2.0.bn2.weight
-2023-06-18 13:54:09,459 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2b_w    mapped name: layer2.0.conv2.weight
-2023-06-18 13:54:09,459 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2c_b    mapped name: layer2.0.conv3.bias
-2023-06-18 13:54:09,460 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2c_bn_b mapped name: layer2.0.bn3.bias
-2023-06-18 13:54:09,460 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2c_bn_s mapped name: layer2.0.bn3.weight
-2023-06-18 13:54:09,460 fcos_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2c_w    mapped name: layer2.0.conv3.weight
-2023-06-18 13:54:09,460 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2a_b    mapped name: layer2.1.conv1.bias
-2023-06-18 13:54:09,460 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2a_bn_b mapped name: layer2.1.bn1.bias
-2023-06-18 13:54:09,460 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2a_bn_s mapped name: layer2.1.bn1.weight
-2023-06-18 13:54:09,460 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2a_w    mapped name: layer2.1.conv1.weight
-2023-06-18 13:54:09,460 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2b_b    mapped name: layer2.1.conv2.bias
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2b_bn_b mapped name: layer2.1.bn2.bias
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2b_bn_s mapped name: layer2.1.bn2.weight
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2b_w    mapped name: layer2.1.conv2.weight
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2c_b    mapped name: layer2.1.conv3.bias
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2c_bn_b mapped name: layer2.1.bn3.bias
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2c_bn_s mapped name: layer2.1.bn3.weight
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2c_w    mapped name: layer2.1.conv3.weight
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2a_b    mapped name: layer2.2.conv1.bias
-2023-06-18 13:54:09,461 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2a_bn_b mapped name: layer2.2.bn1.bias
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2a_bn_s mapped name: layer2.2.bn1.weight
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2a_w    mapped name: layer2.2.conv1.weight
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2b_b    mapped name: layer2.2.conv2.bias
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2b_bn_b mapped name: layer2.2.bn2.bias
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2b_bn_s mapped name: layer2.2.bn2.weight
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2b_w    mapped name: layer2.2.conv2.weight
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2c_b    mapped name: layer2.2.conv3.bias
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2c_bn_b mapped name: layer2.2.bn3.bias
-2023-06-18 13:54:09,462 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2c_bn_s mapped name: layer2.2.bn3.weight
-2023-06-18 13:54:09,463 fcos_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2c_w    mapped name: layer2.2.conv3.weight
-2023-06-18 13:54:09,463 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2a_b    mapped name: layer2.3.conv1.bias
-2023-06-18 13:54:09,463 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2a_bn_b mapped name: layer2.3.bn1.bias
-2023-06-18 13:54:09,463 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2a_bn_s mapped name: layer2.3.bn1.weight
-2023-06-18 13:54:09,463 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2a_w    mapped name: layer2.3.conv1.weight
-2023-06-18 13:54:09,463 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2b_b    mapped name: layer2.3.conv2.bias
-2023-06-18 13:54:09,463 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2b_bn_b mapped name: layer2.3.bn2.bias
-2023-06-18 13:54:09,463 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2b_bn_s mapped name: layer2.3.bn2.weight
-2023-06-18 13:54:09,464 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2b_w    mapped name: layer2.3.conv2.weight
-2023-06-18 13:54:09,464 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2c_b    mapped name: layer2.3.conv3.bias
-2023-06-18 13:54:09,464 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2c_bn_b mapped name: layer2.3.bn3.bias
-2023-06-18 13:54:09,464 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2c_bn_s mapped name: layer2.3.bn3.weight
-2023-06-18 13:54:09,464 fcos_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2c_w    mapped name: layer2.3.conv3.weight
-2023-06-18 13:54:09,464 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch1_b     mapped name: layer3.0.downsample.0.bias
-2023-06-18 13:54:09,464 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch1_bn_b  mapped name: layer3.0.downsample.1.bias
-2023-06-18 13:54:09,464 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch1_bn_s  mapped name: layer3.0.downsample.1.weight
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch1_w     mapped name: layer3.0.downsample.0.weight
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2a_b    mapped name: layer3.0.conv1.bias
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2a_bn_b mapped name: layer3.0.bn1.bias
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2a_bn_s mapped name: layer3.0.bn1.weight
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2a_w    mapped name: layer3.0.conv1.weight
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2b_b    mapped name: layer3.0.conv2.bias
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2b_bn_b mapped name: layer3.0.bn2.bias
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2b_bn_s mapped name: layer3.0.bn2.weight
-2023-06-18 13:54:09,465 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2b_w    mapped name: layer3.0.conv2.weight
-2023-06-18 13:54:09,466 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2c_b    mapped name: layer3.0.conv3.bias
-2023-06-18 13:54:09,466 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2c_bn_b mapped name: layer3.0.bn3.bias
-2023-06-18 13:54:09,466 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2c_bn_s mapped name: layer3.0.bn3.weight
-2023-06-18 13:54:09,466 fcos_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2c_w    mapped name: layer3.0.conv3.weight
-2023-06-18 13:54:09,466 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2a_b    mapped name: layer3.1.conv1.bias
-2023-06-18 13:54:09,466 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2a_bn_b mapped name: layer3.1.bn1.bias
-2023-06-18 13:54:09,466 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2a_bn_s mapped name: layer3.1.bn1.weight
-2023-06-18 13:54:09,466 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2a_w    mapped name: layer3.1.conv1.weight
-2023-06-18 13:54:09,467 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2b_b    mapped name: layer3.1.conv2.bias
-2023-06-18 13:54:09,467 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2b_bn_b mapped name: layer3.1.bn2.bias
-2023-06-18 13:54:09,467 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2b_bn_s mapped name: layer3.1.bn2.weight
-2023-06-18 13:54:09,467 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2b_w    mapped name: layer3.1.conv2.weight
-2023-06-18 13:54:09,467 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2c_b    mapped name: layer3.1.conv3.bias
-2023-06-18 13:54:09,467 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2c_bn_b mapped name: layer3.1.bn3.bias
-2023-06-18 13:54:09,467 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2c_bn_s mapped name: layer3.1.bn3.weight
-2023-06-18 13:54:09,467 fcos_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2c_w    mapped name: layer3.1.conv3.weight
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2a_b    mapped name: layer3.2.conv1.bias
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2a_bn_b mapped name: layer3.2.bn1.bias
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2a_bn_s mapped name: layer3.2.bn1.weight
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2a_w    mapped name: layer3.2.conv1.weight
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2b_b    mapped name: layer3.2.conv2.bias
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2b_bn_b mapped name: layer3.2.bn2.bias
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2b_bn_s mapped name: layer3.2.bn2.weight
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2b_w    mapped name: layer3.2.conv2.weight
-2023-06-18 13:54:09,468 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2c_b    mapped name: layer3.2.conv3.bias
-2023-06-18 13:54:09,469 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2c_bn_b mapped name: layer3.2.bn3.bias
-2023-06-18 13:54:09,469 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2c_bn_s mapped name: layer3.2.bn3.weight
-2023-06-18 13:54:09,469 fcos_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2c_w    mapped name: layer3.2.conv3.weight
-2023-06-18 13:54:09,469 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2a_b    mapped name: layer3.3.conv1.bias
-2023-06-18 13:54:09,469 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2a_bn_b mapped name: layer3.3.bn1.bias
-2023-06-18 13:54:09,469 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2a_bn_s mapped name: layer3.3.bn1.weight
-2023-06-18 13:54:09,469 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2a_w    mapped name: layer3.3.conv1.weight
-2023-06-18 13:54:09,469 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2b_b    mapped name: layer3.3.conv2.bias
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2b_bn_b mapped name: layer3.3.bn2.bias
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2b_bn_s mapped name: layer3.3.bn2.weight
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2b_w    mapped name: layer3.3.conv2.weight
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2c_b    mapped name: layer3.3.conv3.bias
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2c_bn_b mapped name: layer3.3.bn3.bias
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2c_bn_s mapped name: layer3.3.bn3.weight
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2c_w    mapped name: layer3.3.conv3.weight
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2a_b    mapped name: layer3.4.conv1.bias
-2023-06-18 13:54:09,470 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2a_bn_b mapped name: layer3.4.bn1.bias
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2a_bn_s mapped name: layer3.4.bn1.weight
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2a_w    mapped name: layer3.4.conv1.weight
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2b_b    mapped name: layer3.4.conv2.bias
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2b_bn_b mapped name: layer3.4.bn2.bias
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2b_bn_s mapped name: layer3.4.bn2.weight
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2b_w    mapped name: layer3.4.conv2.weight
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2c_b    mapped name: layer3.4.conv3.bias
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2c_bn_b mapped name: layer3.4.bn3.bias
-2023-06-18 13:54:09,471 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2c_bn_s mapped name: layer3.4.bn3.weight
-2023-06-18 13:54:09,472 fcos_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2c_w    mapped name: layer3.4.conv3.weight
-2023-06-18 13:54:09,472 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2a_b    mapped name: layer3.5.conv1.bias
-2023-06-18 13:54:09,472 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2a_bn_b mapped name: layer3.5.bn1.bias
-2023-06-18 13:54:09,472 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2a_bn_s mapped name: layer3.5.bn1.weight
-2023-06-18 13:54:09,472 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2a_w    mapped name: layer3.5.conv1.weight
-2023-06-18 13:54:09,472 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2b_b    mapped name: layer3.5.conv2.bias
-2023-06-18 13:54:09,472 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2b_bn_b mapped name: layer3.5.bn2.bias
-2023-06-18 13:54:09,472 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2b_bn_s mapped name: layer3.5.bn2.weight
-2023-06-18 13:54:09,473 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2b_w    mapped name: layer3.5.conv2.weight
-2023-06-18 13:54:09,473 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2c_b    mapped name: layer3.5.conv3.bias
-2023-06-18 13:54:09,473 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2c_bn_b mapped name: layer3.5.bn3.bias
-2023-06-18 13:54:09,473 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2c_bn_s mapped name: layer3.5.bn3.weight
-2023-06-18 13:54:09,473 fcos_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2c_w    mapped name: layer3.5.conv3.weight
-2023-06-18 13:54:09,473 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch1_b     mapped name: layer4.0.downsample.0.bias
-2023-06-18 13:54:09,473 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch1_bn_b  mapped name: layer4.0.downsample.1.bias
-2023-06-18 13:54:09,473 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch1_bn_s  mapped name: layer4.0.downsample.1.weight
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch1_w     mapped name: layer4.0.downsample.0.weight
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2a_b    mapped name: layer4.0.conv1.bias
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2a_bn_b mapped name: layer4.0.bn1.bias
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2a_bn_s mapped name: layer4.0.bn1.weight
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2a_w    mapped name: layer4.0.conv1.weight
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2b_b    mapped name: layer4.0.conv2.bias
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2b_bn_b mapped name: layer4.0.bn2.bias
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2b_bn_s mapped name: layer4.0.bn2.weight
-2023-06-18 13:54:09,474 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2b_w    mapped name: layer4.0.conv2.weight
-2023-06-18 13:54:09,475 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2c_b    mapped name: layer4.0.conv3.bias
-2023-06-18 13:54:09,475 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2c_bn_b mapped name: layer4.0.bn3.bias
-2023-06-18 13:54:09,475 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2c_bn_s mapped name: layer4.0.bn3.weight
-2023-06-18 13:54:09,475 fcos_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2c_w    mapped name: layer4.0.conv3.weight
-2023-06-18 13:54:09,475 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2a_b    mapped name: layer4.1.conv1.bias
-2023-06-18 13:54:09,475 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2a_bn_b mapped name: layer4.1.bn1.bias
-2023-06-18 13:54:09,475 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2a_bn_s mapped name: layer4.1.bn1.weight
-2023-06-18 13:54:09,475 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2a_w    mapped name: layer4.1.conv1.weight
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2b_b    mapped name: layer4.1.conv2.bias
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2b_bn_b mapped name: layer4.1.bn2.bias
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2b_bn_s mapped name: layer4.1.bn2.weight
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2b_w    mapped name: layer4.1.conv2.weight
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2c_b    mapped name: layer4.1.conv3.bias
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2c_bn_b mapped name: layer4.1.bn3.bias
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2c_bn_s mapped name: layer4.1.bn3.weight
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2c_w    mapped name: layer4.1.conv3.weight
-2023-06-18 13:54:09,476 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2a_b    mapped name: layer4.2.conv1.bias
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2a_bn_b mapped name: layer4.2.bn1.bias
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2a_bn_s mapped name: layer4.2.bn1.weight
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2a_w    mapped name: layer4.2.conv1.weight
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2b_b    mapped name: layer4.2.conv2.bias
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2b_bn_b mapped name: layer4.2.bn2.bias
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2b_bn_s mapped name: layer4.2.bn2.weight
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2b_w    mapped name: layer4.2.conv2.weight
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2c_b    mapped name: layer4.2.conv3.bias
-2023-06-18 13:54:09,477 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2c_bn_b mapped name: layer4.2.bn3.bias
-2023-06-18 13:54:09,478 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2c_bn_s mapped name: layer4.2.bn3.weight
-2023-06-18 13:54:09,478 fcos_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2c_w    mapped name: layer4.2.conv3.weight
-2023-06-18 13:54:09,478 fcos_core.utils.c2_model_loading INFO: C2 name: res_conv1_bn_b       mapped name: bn1.bias
-2023-06-18 13:54:09,478 fcos_core.utils.c2_model_loading INFO: C2 name: res_conv1_bn_s       mapped name: bn1.weight
-2023-06-18 13:54:09,478 fcos_core.utils.c2_model_loading INFO: Remapping conv weights for deformable conv weights
-2023-06-18 13:54:09,500 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.bn1.bias                       loaded from layer1.0.bn1.bias            of shape (64,)
-2023-06-18 13:54:09,501 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.bn1.weight                     loaded from layer1.0.bn1.weight          of shape (64,)
-2023-06-18 13:54:09,501 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.bn2.bias                       loaded from layer1.0.bn2.bias            of shape (64,)
-2023-06-18 13:54:09,501 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.bn2.weight                     loaded from layer1.0.bn2.weight          of shape (64,)
-2023-06-18 13:54:09,501 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.bn3.bias                       loaded from layer1.0.bn3.bias            of shape (256,)
-2023-06-18 13:54:09,501 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.bn3.weight                     loaded from layer1.0.bn3.weight          of shape (256,)
-2023-06-18 13:54:09,501 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.conv1.weight                   loaded from layer1.0.conv1.weight        of shape (64, 64, 1, 1)
-2023-06-18 13:54:09,502 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.conv2.weight                   loaded from layer1.0.conv2.weight        of shape (64, 64, 3, 3)
-2023-06-18 13:54:09,502 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.conv3.weight                   loaded from layer1.0.conv3.weight        of shape (256, 64, 1, 1)
-2023-06-18 13:54:09,502 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.downsample.0.weight            loaded from layer1.0.downsample.0.weight of shape (256, 64, 1, 1)
-2023-06-18 13:54:09,502 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.downsample.1.bias              loaded from layer1.0.downsample.1.bias   of shape (256,)
-2023-06-18 13:54:09,502 fcos_core.utils.model_serialization INFO: backbone.body.layer1.0.downsample.1.weight            loaded from layer1.0.downsample.1.weight of shape (256,)
-2023-06-18 13:54:09,503 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.bn1.bias                       loaded from layer1.1.bn1.bias            of shape (64,)
-2023-06-18 13:54:09,503 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.bn1.weight                     loaded from layer1.1.bn1.weight          of shape (64,)
-2023-06-18 13:54:09,503 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.bn2.bias                       loaded from layer1.1.bn2.bias            of shape (64,)
-2023-06-18 13:54:09,503 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.bn2.weight                     loaded from layer1.1.bn2.weight          of shape (64,)
-2023-06-18 13:54:09,503 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.bn3.bias                       loaded from layer1.1.bn3.bias            of shape (256,)
-2023-06-18 13:54:09,504 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.bn3.weight                     loaded from layer1.1.bn3.weight          of shape (256,)
-2023-06-18 13:54:09,504 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.conv1.weight                   loaded from layer1.1.conv1.weight        of shape (64, 256, 1, 1)
-2023-06-18 13:54:09,504 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.conv2.weight                   loaded from layer1.1.conv2.weight        of shape (64, 64, 3, 3)
-2023-06-18 13:54:09,504 fcos_core.utils.model_serialization INFO: backbone.body.layer1.1.conv3.weight                   loaded from layer1.1.conv3.weight        of shape (256, 64, 1, 1)
-2023-06-18 13:54:09,504 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.bn1.bias                       loaded from layer1.2.bn1.bias            of shape (64,)
-2023-06-18 13:54:09,505 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.bn1.weight                     loaded from layer1.2.bn1.weight          of shape (64,)
-2023-06-18 13:54:09,505 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.bn2.bias                       loaded from layer1.2.bn2.bias            of shape (64,)
-2023-06-18 13:54:09,505 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.bn2.weight                     loaded from layer1.2.bn2.weight          of shape (64,)
-2023-06-18 13:54:09,505 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.bn3.bias                       loaded from layer1.2.bn3.bias            of shape (256,)
-2023-06-18 13:54:09,505 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.bn3.weight                     loaded from layer1.2.bn3.weight          of shape (256,)
-2023-06-18 13:54:09,506 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.conv1.weight                   loaded from layer1.2.conv1.weight        of shape (64, 256, 1, 1)
-2023-06-18 13:54:09,506 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.conv2.weight                   loaded from layer1.2.conv2.weight        of shape (64, 64, 3, 3)
-2023-06-18 13:54:09,506 fcos_core.utils.model_serialization INFO: backbone.body.layer1.2.conv3.weight                   loaded from layer1.2.conv3.weight        of shape (256, 64, 1, 1)
-2023-06-18 13:54:09,506 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.bn1.bias                       loaded from layer2.0.bn1.bias            of shape (128,)
-2023-06-18 13:54:09,506 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.bn1.weight                     loaded from layer2.0.bn1.weight          of shape (128,)
-2023-06-18 13:54:09,506 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.bn2.bias                       loaded from layer2.0.bn2.bias            of shape (128,)
-2023-06-18 13:54:09,506 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.bn2.weight                     loaded from layer2.0.bn2.weight          of shape (128,)
-2023-06-18 13:54:09,507 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.bn3.bias                       loaded from layer2.0.bn3.bias            of shape (512,)
-2023-06-18 13:54:09,507 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.bn3.weight                     loaded from layer2.0.bn3.weight          of shape (512,)
-2023-06-18 13:54:09,507 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.conv1.weight                   loaded from layer2.0.conv1.weight        of shape (128, 256, 1, 1)
-2023-06-18 13:54:09,507 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.conv2.weight                   loaded from layer2.0.conv2.weight        of shape (128, 128, 3, 3)
-2023-06-18 13:54:09,507 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.conv3.weight                   loaded from layer2.0.conv3.weight        of shape (512, 128, 1, 1)
-2023-06-18 13:54:09,507 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.downsample.0.weight            loaded from layer2.0.downsample.0.weight of shape (512, 256, 1, 1)
-2023-06-18 13:54:09,507 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.downsample.1.bias              loaded from layer2.0.downsample.1.bias   of shape (512,)
-2023-06-18 13:54:09,508 fcos_core.utils.model_serialization INFO: backbone.body.layer2.0.downsample.1.weight            loaded from layer2.0.downsample.1.weight of shape (512,)
-2023-06-18 13:54:09,508 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.bn1.bias                       loaded from layer2.1.bn1.bias            of shape (128,)
-2023-06-18 13:54:09,508 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.bn1.weight                     loaded from layer2.1.bn1.weight          of shape (128,)
-2023-06-18 13:54:09,508 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.bn2.bias                       loaded from layer2.1.bn2.bias            of shape (128,)
-2023-06-18 13:54:09,508 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.bn2.weight                     loaded from layer2.1.bn2.weight          of shape (128,)
-2023-06-18 13:54:09,508 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.bn3.bias                       loaded from layer2.1.bn3.bias            of shape (512,)
-2023-06-18 13:54:09,508 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.bn3.weight                     loaded from layer2.1.bn3.weight          of shape (512,)
-2023-06-18 13:54:09,509 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.conv1.weight                   loaded from layer2.1.conv1.weight        of shape (128, 512, 1, 1)
-2023-06-18 13:54:09,509 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.conv2.weight                   loaded from layer2.1.conv2.weight        of shape (128, 128, 3, 3)
-2023-06-18 13:54:09,509 fcos_core.utils.model_serialization INFO: backbone.body.layer2.1.conv3.weight                   loaded from layer2.1.conv3.weight        of shape (512, 128, 1, 1)
-2023-06-18 13:54:09,509 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.bn1.bias                       loaded from layer2.2.bn1.bias            of shape (128,)
-2023-06-18 13:54:09,509 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.bn1.weight                     loaded from layer2.2.bn1.weight          of shape (128,)
-2023-06-18 13:54:09,509 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.bn2.bias                       loaded from layer2.2.bn2.bias            of shape (128,)
-2023-06-18 13:54:09,510 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.bn2.weight                     loaded from layer2.2.bn2.weight          of shape (128,)
-2023-06-18 13:54:09,510 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.bn3.bias                       loaded from layer2.2.bn3.bias            of shape (512,)
-2023-06-18 13:54:09,510 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.bn3.weight                     loaded from layer2.2.bn3.weight          of shape (512,)
-2023-06-18 13:54:09,510 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.conv1.weight                   loaded from layer2.2.conv1.weight        of shape (128, 512, 1, 1)
-2023-06-18 13:54:09,510 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.conv2.weight                   loaded from layer2.2.conv2.weight        of shape (128, 128, 3, 3)
-2023-06-18 13:54:09,510 fcos_core.utils.model_serialization INFO: backbone.body.layer2.2.conv3.weight                   loaded from layer2.2.conv3.weight        of shape (512, 128, 1, 1)
-2023-06-18 13:54:09,510 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.bn1.bias                       loaded from layer2.3.bn1.bias            of shape (128,)
-2023-06-18 13:54:09,511 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.bn1.weight                     loaded from layer2.3.bn1.weight          of shape (128,)
-2023-06-18 13:54:09,511 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.bn2.bias                       loaded from layer2.3.bn2.bias            of shape (128,)
-2023-06-18 13:54:09,511 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.bn2.weight                     loaded from layer2.3.bn2.weight          of shape (128,)
-2023-06-18 13:54:09,511 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.bn3.bias                       loaded from layer2.3.bn3.bias            of shape (512,)
-2023-06-18 13:54:09,511 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.bn3.weight                     loaded from layer2.3.bn3.weight          of shape (512,)
-2023-06-18 13:54:09,511 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.conv1.weight                   loaded from layer2.3.conv1.weight        of shape (128, 512, 1, 1)
-2023-06-18 13:54:09,511 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.conv2.weight                   loaded from layer2.3.conv2.weight        of shape (128, 128, 3, 3)
-2023-06-18 13:54:09,512 fcos_core.utils.model_serialization INFO: backbone.body.layer2.3.conv3.weight                   loaded from layer2.3.conv3.weight        of shape (512, 128, 1, 1)
-2023-06-18 13:54:09,512 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.bn1.bias                       loaded from layer3.0.bn1.bias            of shape (256,)
-2023-06-18 13:54:09,512 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.bn1.weight                     loaded from layer3.0.bn1.weight          of shape (256,)
-2023-06-18 13:54:09,512 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.bn2.bias                       loaded from layer3.0.bn2.bias            of shape (256,)
-2023-06-18 13:54:09,512 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.bn2.weight                     loaded from layer3.0.bn2.weight          of shape (256,)
-2023-06-18 13:54:09,512 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.bn3.bias                       loaded from layer3.0.bn3.bias            of shape (1024,)
-2023-06-18 13:54:09,513 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.bn3.weight                     loaded from layer3.0.bn3.weight          of shape (1024,)
-2023-06-18 13:54:09,513 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.conv1.weight                   loaded from layer3.0.conv1.weight        of shape (256, 512, 1, 1)
-2023-06-18 13:54:09,513 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.conv2.weight                   loaded from layer3.0.conv2.weight        of shape (256, 256, 3, 3)
-2023-06-18 13:54:09,513 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.conv3.weight                   loaded from layer3.0.conv3.weight        of shape (1024, 256, 1, 1)
-2023-06-18 13:54:09,513 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.downsample.0.weight            loaded from layer3.0.downsample.0.weight of shape (1024, 512, 1, 1)
-2023-06-18 13:54:09,513 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.downsample.1.bias              loaded from layer3.0.downsample.1.bias   of shape (1024,)
-2023-06-18 13:54:09,513 fcos_core.utils.model_serialization INFO: backbone.body.layer3.0.downsample.1.weight            loaded from layer3.0.downsample.1.weight of shape (1024,)
-2023-06-18 13:54:09,514 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.bn1.bias                       loaded from layer3.1.bn1.bias            of shape (256,)
-2023-06-18 13:54:09,514 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.bn1.weight                     loaded from layer3.1.bn1.weight          of shape (256,)
-2023-06-18 13:54:09,514 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.bn2.bias                       loaded from layer3.1.bn2.bias            of shape (256,)
-2023-06-18 13:54:09,514 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.bn2.weight                     loaded from layer3.1.bn2.weight          of shape (256,)
-2023-06-18 13:54:09,514 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.bn3.bias                       loaded from layer3.1.bn3.bias            of shape (1024,)
-2023-06-18 13:54:09,514 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.bn3.weight                     loaded from layer3.1.bn3.weight          of shape (1024,)
-2023-06-18 13:54:09,515 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.conv1.weight                   loaded from layer3.1.conv1.weight        of shape (256, 1024, 1, 1)
-2023-06-18 13:54:09,515 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.conv2.weight                   loaded from layer3.1.conv2.weight        of shape (256, 256, 3, 3)
-2023-06-18 13:54:09,515 fcos_core.utils.model_serialization INFO: backbone.body.layer3.1.conv3.weight                   loaded from layer3.1.conv3.weight        of shape (1024, 256, 1, 1)
-2023-06-18 13:54:09,515 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.bn1.bias                       loaded from layer3.2.bn1.bias            of shape (256,)
-2023-06-18 13:54:09,515 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.bn1.weight                     loaded from layer3.2.bn1.weight          of shape (256,)
-2023-06-18 13:54:09,515 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.bn2.bias                       loaded from layer3.2.bn2.bias            of shape (256,)
-2023-06-18 13:54:09,515 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.bn2.weight                     loaded from layer3.2.bn2.weight          of shape (256,)
-2023-06-18 13:54:09,516 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.bn3.bias                       loaded from layer3.2.bn3.bias            of shape (1024,)
-2023-06-18 13:54:09,516 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.bn3.weight                     loaded from layer3.2.bn3.weight          of shape (1024,)
-2023-06-18 13:54:09,516 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.conv1.weight                   loaded from layer3.2.conv1.weight        of shape (256, 1024, 1, 1)
-2023-06-18 13:54:09,516 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.conv2.weight                   loaded from layer3.2.conv2.weight        of shape (256, 256, 3, 3)
-2023-06-18 13:54:09,516 fcos_core.utils.model_serialization INFO: backbone.body.layer3.2.conv3.weight                   loaded from layer3.2.conv3.weight        of shape (1024, 256, 1, 1)
-2023-06-18 13:54:09,516 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.bn1.bias                       loaded from layer3.3.bn1.bias            of shape (256,)
-2023-06-18 13:54:09,516 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.bn1.weight                     loaded from layer3.3.bn1.weight          of shape (256,)
-2023-06-18 13:54:09,517 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.bn2.bias                       loaded from layer3.3.bn2.bias            of shape (256,)
-2023-06-18 13:54:09,517 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.bn2.weight                     loaded from layer3.3.bn2.weight          of shape (256,)
-2023-06-18 13:54:09,517 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.bn3.bias                       loaded from layer3.3.bn3.bias            of shape (1024,)
-2023-06-18 13:54:09,517 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.bn3.weight                     loaded from layer3.3.bn3.weight          of shape (1024,)
-2023-06-18 13:54:09,517 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.conv1.weight                   loaded from layer3.3.conv1.weight        of shape (256, 1024, 1, 1)
-2023-06-18 13:54:09,517 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.conv2.weight                   loaded from layer3.3.conv2.weight        of shape (256, 256, 3, 3)
-2023-06-18 13:54:09,517 fcos_core.utils.model_serialization INFO: backbone.body.layer3.3.conv3.weight                   loaded from layer3.3.conv3.weight        of shape (1024, 256, 1, 1)
-2023-06-18 13:54:09,517 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.bn1.bias                       loaded from layer3.4.bn1.bias            of shape (256,)
-2023-06-18 13:54:09,518 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.bn1.weight                     loaded from layer3.4.bn1.weight          of shape (256,)
-2023-06-18 13:54:09,518 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.bn2.bias                       loaded from layer3.4.bn2.bias            of shape (256,)
-2023-06-18 13:54:09,518 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.bn2.weight                     loaded from layer3.4.bn2.weight          of shape (256,)
-2023-06-18 13:54:09,518 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.bn3.bias                       loaded from layer3.4.bn3.bias            of shape (1024,)
-2023-06-18 13:54:09,518 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.bn3.weight                     loaded from layer3.4.bn3.weight          of shape (1024,)
-2023-06-18 13:54:09,518 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.conv1.weight                   loaded from layer3.4.conv1.weight        of shape (256, 1024, 1, 1)
-2023-06-18 13:54:09,518 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.conv2.weight                   loaded from layer3.4.conv2.weight        of shape (256, 256, 3, 3)
-2023-06-18 13:54:09,518 fcos_core.utils.model_serialization INFO: backbone.body.layer3.4.conv3.weight                   loaded from layer3.4.conv3.weight        of shape (1024, 256, 1, 1)
-2023-06-18 13:54:09,519 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.bn1.bias                       loaded from layer3.5.bn1.bias            of shape (256,)
-2023-06-18 13:54:09,519 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.bn1.weight                     loaded from layer3.5.bn1.weight          of shape (256,)
-2023-06-18 13:54:09,519 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.bn2.bias                       loaded from layer3.5.bn2.bias            of shape (256,)
-2023-06-18 13:54:09,519 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.bn2.weight                     loaded from layer3.5.bn2.weight          of shape (256,)
-2023-06-18 13:54:09,519 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.bn3.bias                       loaded from layer3.5.bn3.bias            of shape (1024,)
-2023-06-18 13:54:09,519 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.bn3.weight                     loaded from layer3.5.bn3.weight          of shape (1024,)
-2023-06-18 13:54:09,519 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.conv1.weight                   loaded from layer3.5.conv1.weight        of shape (256, 1024, 1, 1)
-2023-06-18 13:54:09,519 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.conv2.weight                   loaded from layer3.5.conv2.weight        of shape (256, 256, 3, 3)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer3.5.conv3.weight                   loaded from layer3.5.conv3.weight        of shape (1024, 256, 1, 1)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.bn1.bias                       loaded from layer4.0.bn1.bias            of shape (512,)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.bn1.weight                     loaded from layer4.0.bn1.weight          of shape (512,)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.bn2.bias                       loaded from layer4.0.bn2.bias            of shape (512,)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.bn2.weight                     loaded from layer4.0.bn2.weight          of shape (512,)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.bn3.bias                       loaded from layer4.0.bn3.bias            of shape (2048,)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.bn3.weight                     loaded from layer4.0.bn3.weight          of shape (2048,)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.conv1.weight                   loaded from layer4.0.conv1.weight        of shape (512, 1024, 1, 1)
-2023-06-18 13:54:09,520 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.conv2.weight                   loaded from layer4.0.conv2.weight        of shape (512, 512, 3, 3)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.conv3.weight                   loaded from layer4.0.conv3.weight        of shape (2048, 512, 1, 1)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.downsample.0.weight            loaded from layer4.0.downsample.0.weight of shape (2048, 1024, 1, 1)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.downsample.1.bias              loaded from layer4.0.downsample.1.bias   of shape (2048,)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.0.downsample.1.weight            loaded from layer4.0.downsample.1.weight of shape (2048,)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.bn1.bias                       loaded from layer4.1.bn1.bias            of shape (512,)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.bn1.weight                     loaded from layer4.1.bn1.weight          of shape (512,)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.bn2.bias                       loaded from layer4.1.bn2.bias            of shape (512,)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.bn2.weight                     loaded from layer4.1.bn2.weight          of shape (512,)
-2023-06-18 13:54:09,521 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.bn3.bias                       loaded from layer4.1.bn3.bias            of shape (2048,)
-2023-06-18 13:54:09,522 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.bn3.weight                     loaded from layer4.1.bn3.weight          of shape (2048,)
-2023-06-18 13:54:09,522 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.conv1.weight                   loaded from layer4.1.conv1.weight        of shape (512, 2048, 1, 1)
-2023-06-18 13:54:09,522 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.conv2.weight                   loaded from layer4.1.conv2.weight        of shape (512, 512, 3, 3)
-2023-06-18 13:54:09,522 fcos_core.utils.model_serialization INFO: backbone.body.layer4.1.conv3.weight                   loaded from layer4.1.conv3.weight        of shape (2048, 512, 1, 1)
-2023-06-18 13:54:09,522 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.bn1.bias                       loaded from layer4.2.bn1.bias            of shape (512,)
-2023-06-18 13:54:09,522 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.bn1.weight                     loaded from layer4.2.bn1.weight          of shape (512,)
-2023-06-18 13:54:09,522 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.bn2.bias                       loaded from layer4.2.bn2.bias            of shape (512,)
-2023-06-18 13:54:09,523 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.bn2.weight                     loaded from layer4.2.bn2.weight          of shape (512,)
-2023-06-18 13:54:09,523 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.bn3.bias                       loaded from layer4.2.bn3.bias            of shape (2048,)
-2023-06-18 13:54:09,523 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.bn3.weight                     loaded from layer4.2.bn3.weight          of shape (2048,)
-2023-06-18 13:54:09,523 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.conv1.weight                   loaded from layer4.2.conv1.weight        of shape (512, 2048, 1, 1)
-2023-06-18 13:54:09,523 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.conv2.weight                   loaded from layer4.2.conv2.weight        of shape (512, 512, 3, 3)
-2023-06-18 13:54:09,523 fcos_core.utils.model_serialization INFO: backbone.body.layer4.2.conv3.weight                   loaded from layer4.2.conv3.weight        of shape (2048, 512, 1, 1)
-2023-06-18 13:54:09,523 fcos_core.utils.model_serialization INFO: backbone.body.stem.bn1.bias                           loaded from bn1.bias                     of shape (64,)
-2023-06-18 13:54:09,523 fcos_core.utils.model_serialization INFO: backbone.body.stem.bn1.weight                         loaded from bn1.weight                   of shape (64,)
-2023-06-18 13:54:09,524 fcos_core.utils.model_serialization INFO: backbone.body.stem.conv1.weight                       loaded from conv1.weight                 of shape (64, 3, 7, 7)
-2023-06-18 13:54:09,587 fcos_core.data.build WARNING: When using more than one image per GPU you may encounter an out-of-memory (OOM) error if your GPU does not have sufficient memory. If this happens, you can reduce SOLVER.IMS_PER_BATCH (for training) or TEST.IMS_PER_BATCH (for inference). For training, you must also adjust the learning rate and schedule length according to the linear scaling rule. See for example: https://github.com/facebookresearch/Detectron/blob/master/configs/getting_started/tutorial_1gpu_e2e_faster_rcnn_R-50-FPN.yaml#L14
-2023-06-18 13:54:12,804 fcos_core.trainer INFO: Start training

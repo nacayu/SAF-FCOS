@@ -31,7 +31,7 @@ def train(cfg, local_rank, distributed):
     model = build_detection_model(cfg)
     device = torch.device(cfg.MODEL.DEVICE)
     model.to(device)
-
+    # must support syncbatchnorm
     if cfg.MODEL.USE_SYNCBN:
         assert is_pytorch_1_1_0_or_later(), \
             "SyncBatchNorm is only available in pytorch >= 1.1.0"
@@ -56,6 +56,7 @@ def train(cfg, local_rank, distributed):
     checkpointer = DetectronCheckpointer(
         cfg, model, optimizer, scheduler, output_dir, save_to_disk
     )
+    # load WEIGHT from: "catalog://ImageNetPretrained/MSRA/R-50"
     extra_checkpoint_data = checkpointer.load(cfg.MODEL.WEIGHT)
     arguments.update(extra_checkpoint_data)
 
@@ -155,7 +156,7 @@ def main():
             backend="nccl", init_method="env://"
         )
         synchronize()
-
+    # merge config and overwrite old config 
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
     if 'IMG' not in cfg.MODEL.BACKBONE.FUSION:

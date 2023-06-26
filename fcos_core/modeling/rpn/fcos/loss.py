@@ -49,11 +49,9 @@ class FCOSLossComputation(object):
 
     def get_sample_region(self, gt, strides, num_points_per, gt_xs, gt_ys, radius=1.0):
         '''
-        This code is from
-        https://github.com/yqyao/FCOS_PLUS/blob/0d20ba34ccc316650d8c30febb2eb40cb6eaae37/
-        maskrcnn_benchmark/modeling/rpn/fcos_nuscenes/loss.py#L42
-        通过计算样本区域的边界框, 并将其与ground truth边界框进行比较和限制, 函
-        数生成了一个布尔类型的掩码, 用于标识特征图中的每个点是否在样本区域内部。这个掩码将被用于选择正样本和负样本, 并用于计算FCOS目标检测器的损失函数
+        Get points mask whether points inside any 2d bboxes
+        只会把gt中心一定范围内的point作为正样本:[center_x_gt——stride*radius, center_x_gt+stride*radius]
+        当然如果gt本身已经小于center_sampling后的范围了, 取范围较小的
         '''
         num_gts = gt.shape[0]
         K = len(gt_xs)      # location numbers
@@ -68,19 +66,18 @@ class FCOSLossComputation(object):
         for level, n_p in enumerate(num_points_per):
             end = beg + n_p   
             stride = strides[level] * radius
+            # get stride area range for points
             xmin = center_x[beg:end] - stride
             ymin = center_y[beg:end] - stride
             xmax = center_x[beg:end] + stride
             ymax = center_y[beg:end] + stride
-            # limit sample region in gt
-            # if gt stride_area xmin > gt center_xmin, choose stride area
+            # limit sample region, compare radius area and gt bboxes area range(get Intersection area)
             center_gt[beg:end, :, 0] = torch.where(
                 xmin > gt[beg:end, :, 0], xmin, gt[beg:end, :, 0]
             )
             center_gt[beg:end, :, 1] = torch.where(
                 ymin > gt[beg:end, :, 1], ymin, gt[beg:end, :, 1]
             )
-            # # if gt stride_area xmax > gt center_xmax, choose gt
             center_gt[beg:end, :, 2] = torch.where(
                 xmax > gt[beg:end, :, 2],
                 gt[beg:end, :, 2], xmax
@@ -90,19 +87,27 @@ class FCOSLossComputation(object):
                 gt[beg:end, :, 3], ymax
             )
             beg = end
-        # get four direction offsets of locations to corresponding assigned gt bboxes
-        # gt_xs, gt_ys: x, y for location centers
+        # get four direction offsets of each points to all gt bboxes
         left = gt_xs[:, None] - center_gt[..., 0]
         right = center_gt[..., 2] - gt_xs[:, None]
         top = gt_ys[:, None] - center_gt[..., 1]
         bottom = center_gt[..., 3] - gt_ys[:, None]
-        # get 
+        
         center_bbox = torch.stack((left, top, right, bottom), -1)
-        # True if the corresponding point in the feature map lies inside any of the true bounding boxes
+        # True if the corresponding points in the feature map lies inside any center sampling area
         inside_gt_bbox_mask = center_bbox.min(-1)[0] > 0
         return inside_gt_bbox_mask
 
     def prepare_targets(self, points, targets):
+        """
+        Get  per points labels and regression gt
+        Arguments:
+        points: list([tensor])
+        targets: list([BoxList])
+        Returns:
+        labels_level_first: list([tensor]) features_level * n
+        reg_targets_level_first: list([tensor]) features_level * n
+        """
         object_sizes_of_interest = [
             [-1, 64],
             [64, 128],
@@ -123,7 +128,7 @@ class FCOSLossComputation(object):
         num_points_per_level = [len(points_per_level) for points_per_level in points]
         self.num_points_per_level = num_points_per_level
         points_all_level = torch.cat(points, dim=0)
-        # assign gt bboxes to locations
+        # get points mask whether inside any setting area
         labels, reg_targets = self.compute_targets_for_locations(
             points_all_level, targets, expanded_object_sizes_of_interest
         )
@@ -131,7 +136,7 @@ class FCOSLossComputation(object):
         for i in range(len(labels)):
             labels[i] = torch.split(labels[i], num_points_per_level, dim=0)
             reg_targets[i] = torch.split(reg_targets[i], num_points_per_level, dim=0)
-
+        # cat all label batches
         labels_level_first = []
         reg_targets_level_first = []
         for level in range(len(points)):
@@ -151,6 +156,12 @@ class FCOSLossComputation(object):
         return labels_level_first, reg_targets_level_first
 
     def compute_targets_for_locations(self, locations, targets, object_sizes_of_interest):
+        """
+        流程：
+            判断point是否在gt范围内, 若是，则为正样本，否则为负样本
+            判断point对应的gt是否符合regress_range
+            若正样本对应多个gt, 则赋值为面积最小的
+        """
         labels = []
         reg_targets = []
         xs, ys = locations[:, 0], locations[:, 1]
@@ -167,7 +178,7 @@ class FCOSLossComputation(object):
             r = bboxes[:, 2][None] - xs[:, None]
             b = bboxes[:, 3][None] - ys[:, None]
             reg_targets_per_im = torch.stack([l, t, r, b], dim=2)
-            # get mask for points whether inside any gt bboxes
+            # get mask for points whether inside any center sampling area
             if self.center_sampling_radius > 0:
                 is_in_boxes = self.get_sample_region(
                     bboxes,
@@ -179,21 +190,21 @@ class FCOSLossComputation(object):
             else:
                 # no center sampling, it will use all the locations within a ground-truth box
                 is_in_boxes = reg_targets_per_im.min(dim=2)[0] > 0
-
+            # max offset from center points to all 2d bboxes border
             max_reg_targets_per_im = reg_targets_per_im.max(dim=2)[0]
             # limit the regression range for each location
             is_cared_in_the_level = \
                 (max_reg_targets_per_im >= object_sizes_of_interest[:, [0]]) & \
                 (max_reg_targets_per_im <= object_sizes_of_interest[:, [1]])
-            # mask locations: 1. points not in gt bboxes     2. points regression attrs don't meet object template sizes
+            # mask locations: 1. points not in center_sampling area     2. points regression attrs don't meet object template sizes
             locations_to_gt_area = area[None].repeat(len(locations), 1)
             locations_to_gt_area[is_in_boxes == 0] = INF
             locations_to_gt_area[is_cared_in_the_level == 0] = INF
 
             # if there are still more than one objects for a location,
-            # we choose the one with minimal area
+            # assign center points with minimal area
             locations_to_min_area, locations_to_gt_inds = locations_to_gt_area.min(dim=1)
-
+            # get locations' gt reg
             reg_targets_per_im = reg_targets_per_im[range(len(locations)), locations_to_gt_inds]
             labels_per_im = labels_per_im[locations_to_gt_inds]
             labels_per_im[locations_to_min_area == INF] = 0
@@ -246,7 +257,7 @@ class FCOSLossComputation(object):
         centerness_flatten = torch.cat(centerness_flatten, dim=0)
         labels_flatten = torch.cat(labels_flatten, dim=0)
         reg_targets_flatten = torch.cat(reg_targets_flatten, dim=0)
-
+        # ignore labels == 0
         pos_inds = torch.nonzero(labels_flatten > 0).squeeze(1)
 
         box_regression_flatten = box_regression_flatten[pos_inds]
@@ -257,7 +268,12 @@ class FCOSLossComputation(object):
         # sync num_pos from all gpus
         total_num_pos = reduce_sum(pos_inds.new_tensor([pos_inds.numel()])).item()
         num_pos_avg_per_gpu = max(total_num_pos / float(num_gpus), 1.0)
-
+        
+        """
+        cls_loss: sigmoid focal loss
+        reg_loss: IoU loss with centerness
+        centerness_loss: BCE loss
+        """
         cls_loss = self.cls_loss_func(
             box_cls_flatten,
             labels_flatten.int()
