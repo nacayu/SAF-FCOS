@@ -160,7 +160,7 @@ class FCOSModule(torch.nn.Module):
                 testing, it is an empty dict.
         """
         box_cls, box_regression, centerness = self.head(features)
-        # compute locations per level
+        # 输出是长度为 5 的 list，每个 item 都是存储该特征图点映射到原图上的坐标点 y,x 值
         locations = self.compute_locations(features)
 
         if self.training:
@@ -194,6 +194,9 @@ class FCOSModule(torch.nn.Module):
         return boxes, {}
 
     def compute_locations(self, features):
+        """
+            compute_locations_per_level: 先在特征图尺度计算所有坐标点，然后通过 stride 转化为原图尺度
+        """
         locations = []
         for level, feature in enumerate(features):
             h, w = feature.size()[-2:]

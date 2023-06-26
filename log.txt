@@ -1,7 +1,7 @@
-2023-06-26 22:29:03,899 fcos_core INFO: Using 1 GPUs
-2023-06-26 22:29:03,900 fcos_core INFO: Namespace(config_file='configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml', distributed=False, local_rank=0, norm_info_folder='/home/naca/Projects/dataset/nuscenes/v1.0-trainval/norm_info/', opts=[], skip_test=False)
-2023-06-26 22:29:03,900 fcos_core INFO: Collecting env info (might take some time)
-2023-06-26 22:29:11,813 fcos_core INFO: 
+2023-06-27 01:03:54,943 fcos_core INFO: Using 1 GPUs
+2023-06-27 01:03:54,943 fcos_core INFO: Namespace(config_file='configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml', distributed=False, local_rank=0, norm_info_folder='/home/naca/Projects/dataset/nuscenes/v1.0-trainval/norm_info/', opts=[], skip_test=False)
+2023-06-27 01:03:54,943 fcos_core INFO: Collecting env info (might take some time)
+2023-06-27 01:04:02,714 fcos_core INFO: 
 PyTorch version: 1.9.1+cu111
 Is debug build: False
 CUDA used to build PyTorch: 11.1
@@ -43,8 +43,8 @@ Versions of relevant libraries:
 [conda] torchaudio                0.9.1                    pypi_0    pypi
 [conda] torchvision               0.10.1+cu111             pypi_0    pypi
         Pillow (9.5.0)
-2023-06-26 22:29:11,813 fcos_core INFO: Loaded configuration file configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml
-2023-06-26 22:29:11,814 fcos_core INFO: 
+2023-06-27 01:04:02,715 fcos_core INFO: Loaded configuration file configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml
+2023-06-27 01:04:02,716 fcos_core INFO: 
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
   WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
@@ -90,7 +90,7 @@ SOLVER:
   WARMUP_METHOD: "constant"
 
 
-2023-06-26 22:29:11,817 fcos_core INFO: Running with config:
+2023-06-27 01:04:02,719 fcos_core INFO: Running with config:
 DATALOADER:
   ASPECT_RATIO_GROUPING: True
   NUM_WORKERS: 4
