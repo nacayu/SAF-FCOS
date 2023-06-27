@@ -118,7 +118,7 @@ class FCOSLossComputation(object):
             [512, INF],
         ]
         expanded_object_sizes_of_interest = []
-        # get level-based object template sizes for each points
+        # 不同尺度特征层分配不同大小的object size模板大小: feature map越小分配size越大
         for l, points_per_level in enumerate(points):
             # 五个size按照feature level分别分配
             object_sizes_of_interest_per_level = \
@@ -136,14 +136,13 @@ class FCOSLossComputation(object):
         labels, reg_targets = self.compute_targets_for_locations(
             points_all_level, targets, expanded_object_sizes_of_interest
         )
-        # split labels for each batch
+        # 将每个图片的label按照level分割
         for i in range(len(labels)):
             labels[i] = torch.split(labels[i], num_points_per_level, dim=0)
             reg_targets[i] = torch.split(reg_targets[i], num_points_per_level, dim=0)
-        # cat all label batches
+        # get level-first labels
         labels_level_first = []
         reg_targets_level_first = []
-        # get level-wise labels and reg targets for each batch
         for level in range(len(points)):
             labels_level_first.append(
                 torch.cat([labels_per_im[level] for labels_per_im in labels], dim=0)
@@ -175,7 +174,7 @@ class FCOSLossComputation(object):
         labels = []
         reg_targets = []
         xs, ys = locations[:, 0], locations[:, 1]
-
+        # get labels for images separately
         for im_i in range(len(targets)):
             targets_per_im = targets[im_i]
             assert targets_per_im.mode == "xyxy"
@@ -189,7 +188,7 @@ class FCOSLossComputation(object):
             b = bboxes[:, 3][None] - ys[:, None]
             # 表示每个点距离所有 gt bbox 4条边的距离值
             reg_targets_per_im = torch.stack([l, t, r, b], dim=2)
-            # get mask for points whether inside center sampling
+            # get mask for points whether inside center sampling, shape: [num_points, num_gt_bboxes]
             if self.center_sampling_radius > 0:
                 is_in_boxes = self.get_sample_region(
                     bboxes,
