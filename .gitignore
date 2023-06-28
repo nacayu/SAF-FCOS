@@ -108,10 +108,9 @@ data
 .vscode
 .idea
 .DS_Store
-<<<<<<< HEAD
 tmp/
-=======
->>>>>>> a77b79e50ded6bcfeb0f7be782775ea79fa0d82a
+ckpts/
+log.txt
 
 # custom
 *.pkl

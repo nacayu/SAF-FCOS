@@ -159,6 +159,7 @@ class FCOSModule(torch.nn.Module):
             losses (dict[Tensor]): the losses for the model during training. During
                 testing, it is an empty dict.
         """
+        
         box_cls, box_regression, centerness = self.head(features)
         # 输出是长度为 5 的 list，每个 item 都是存储该特征图点映射到原图上的坐标点 y,x 值
         locations = self.compute_locations(features)
@@ -187,6 +188,7 @@ class FCOSModule(torch.nn.Module):
         return None, losses
 
     def _forward_test(self, locations, box_cls, box_regression, centerness, image_sizes):
+        # box_regression在test时，head输出的结果已经预先进行stride相乘
         boxes = self.box_selector_test(
             locations, box_cls, box_regression,
             centerness, image_sizes

@@ -442,7 +442,7 @@ def run():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Convert radar point',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--dataroot', type=str, default='/home/naca/Projects/dataset/nuscenes',
+    parser.add_argument('--dataroot', type=str, default='"/home/naca/Data/nuScenes/',
                         help="Path where nuScenes is saved.")
     parser.add_argument('--version', type=str, default='v1.0-trainval')
     parser.add_argument('--filename', type=str, default='image_pc_annotations.json')
@@ -451,7 +451,8 @@ if __name__ == '__main__':
     # Make dirs to save pc info, which is extracted from pcd file of front radar
     if not os.path.exists(os.path.join(args.dataroot, 'pc')):
         os.makedirs(os.path.join(args.dataroot, 'pc', 'RADAR_FRONT'))
-
+        
+    # we only need to generate trainval dataset for train and validation
     # nuScenes_sets = ['v1.0-test', 'v1.0-trainval']
     nuScenes_sets = ['v1.0-trainval']
     radius_list = [1, 3, 5, 7, 9, 11]

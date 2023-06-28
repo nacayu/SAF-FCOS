@@ -1,5 +1,11 @@
 ## Installation
 
+### Enviroment
+- Ubuntu20.04 
+- CUDA 11.1 (Not Essential)
+- CUDNN 8.0.5 (Not Essential)
+- NVIDIA RTX3080 (Not Essential)
+
 ### Requirements:
 
 - PyTorch >= 1.8.0 Installation instructions can be found in https://pytorch.org/get-started/locally/.
@@ -29,14 +35,12 @@ pip install ninja yacs cython matplotlib tqdm
 
 # follow PyTorch installation in https://pytorch.org/get-started/locally/
 # we give the instructions for CUDA 10.2
-conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
+conda install pytorch==1.9.1 torchvision==0.10.1 torchaudio==0.9.1 cudatoolkit=11.3 -c pytorch -c conda-forge
 export INSTALL_DIR=$PWD
 
 # install pycocotools. Please make sure you have installed cython.
 cd $INSTALL_DIR
-git clone https://github.com/cocodataset/cocoapi.git
-cd cocoapi/PythonAPI
-python setup.py build_ext install
+pip install pycocotools
 
 # install nuScenes api.
 pip install nuscenes-devkit

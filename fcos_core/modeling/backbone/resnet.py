@@ -150,7 +150,7 @@ class ResNet(nn.Module):
             fusion_model = _FUSION_BLOCKS[cfg.MODEL.BACKBONE.FUSION]
             self.fusion = fusion_model(out_channels, cfg)
 
-        # Optionally freeze (requires_grad=False) parts of the backbone
+        # Optionally freeze (requires_grad=False) parts of the backbone: layer1, layer2
         self._freeze_backbone(cfg.MODEL.BACKBONE.FREEZE_CONV_BODY_AT)
 
     def _freeze_backbone(self, freeze_at):
@@ -174,7 +174,7 @@ class ResNet(nn.Module):
         # fusion branch
         for index, stage_name in enumerate(self.stages):
             im_x = getattr(self, stage_name)(im_x)
-            # fused image and radar feature at first
+            # fused image and radar feature at first layer
             if index == 0:
                 im_x = self.fusion(im_x, ra_x)
             # get multi-level fpn output features

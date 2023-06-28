@@ -5,7 +5,21 @@ The full paper is available at: [https://www.mdpi.com/1424-8220/20/4/956](https:
 
 ## Arch
 ![Alt text](image/architecture.png)
-![Alt text](image/fpn.png)
+
+## Abstract: 
+
+For autonomous driving, it is important to detect obstacles in all scales accurately for safety
+consideration. In this paper, we propose a new spatial attention fusion (SAF) method for obstacle
+detection using mmWave radar and vision sensor, where the sparsity of radar points are considered
+in the proposed SAF. The proposed fusion method can be embedded in the feature-extraction stage,
+which leverages the features of mmWave radar and vision sensor effectively. Based on the SAF,
+an attention weight matrix is generated to fuse the vision features, which is different from the
+concatenation fusion and element-wise add fusion. Moreover, the proposed SAF can be trained
+by an end-to-end manner incorporated with the recent deep learning object detection framework.
+In addition, we build a generation model, which converts radar points to radar images for neural
+network training. Numerical results suggest that the newly developed fusion method achieves
+superior performance in public benchmarking. In addition, the source code will be released in
+the GitHub.
 
 ## You should known
 
@@ -15,10 +29,18 @@ Please read the FCOS project first [FCOS-README.md](FCOS-README.md)
 
 Please check [INSTALL.md](INSTALL.md) for installation instructions.
 
-## Generate Data
+## Download Data
 
-1. Please download Full dataset (v1.0) of nuScenes dataset from the [link](https://www.nuscenes.org/download).
-   ![download](./image/download.png)
+### Version1: download from opendatalab(推荐)
+[opendatalab reference](https://opendatalab.com/nuScenes/cli)
+![Alt text](image/opendatalab.png)
+
+### Version2: download from official website
+
+1. Please download Full dataset (v1.0) of nuScenes dataset from the [link](https://www.nuscenes.org/download)
+
+
+![download](./image/download.png)
 
 2. Then, upload all download tar files to an ubuntu server, and uncompress all *.tar files in a specific folder:
 
@@ -29,23 +51,31 @@ cd ~/Data/nuScenes
 for f in *.tar; do tar -xvf "$f"; done
 ```
 
-3. Convert the radar pcd file as image:
+## Generate Data
+1. Data: you should merge all 10 blobs and re-organize the dataset into the following format:
+
+![Alt text](image/pre_data_arch.png)
+
+2. Convert the radar pcd file as image:
 
 ```shell
 python tools/nuscenes/convert_radar_point.py --dataroot ~/Data/nuScenes
 ```
 
-4. Calculate the norm info of radar images:
+3. Calculate the norm info of radar images:
 
 ```shell
 python tools/nuscenes/extract_pc_image_norm_info_from_image.py --datadir ~/Data/nuScenes --outdir ~/Data/nuScenes/v1.0-trainval
 ```
 
-5. Generate 2D detections results for nuScenes CAM_FRONT images by 'FCOS_imprv_dcnv2_X_101_64x4d_FPN_2x.pth',   
+4. Generate 2D detections results for nuScenes CAM_FRONT images by 'FCOS_imprv_dcnv2_X_101_64x4d_FPN_2x.pth',   
    some of detection results should be refined by labelers to get tighter bboxes,   
    and save the detection results as txt file in the folder ~/Data/nuScenes/fcos/CAM_FRONT:  
-   ![detection1](./image/detection.png)
-   ![detection2](./image/txt.png)
+
+![detection1](./image/detection.png)
+
+![detection2](./image/txt.png)
+
    The detection results are saved as '0, 1479.519, 611.043, 1598.754, 849.447'. The first column is category, and the
    last stands for position.  
    For convenience, we supply our generated 2D txt files in cloud drive and in folder data/fcos.zip.  
@@ -64,39 +94,75 @@ mv fcos.zip ~/Data/nuScenes
 unzip fcos.zip
 ```
 
-6. Generate 2D annotations in coco style for model training and test:
+5. Generate 2D annotations in coco style for model training and test:
 
 ```shell
 python tools/nuscenes/generate_2d_annotations_by_fcos.py --datadir ~/Data/nuScenes --outdir ~/Data/nuScenes/v1.0-trainval
 ```
 
+6. Final data architecture
+
+![Alt text](image/generated_data_arch.png)
+
+## Network Architecture
+### Backbone
+
+### FPN
+
+### Detection Head
+
 ## Prepare training
 
-The following command line will train fcos_imprv_R_101_FPN_1x_ATTMIX_135_Circle_07.yaml on 8 GPUs with Synchronous
+The following command line will train fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml on 2 GPUs with Synchronous
 Stochastic Gradient Descent (SGD):
 
 ```shell
 python -m torch.distributed.launch \
-       --nproc_per_node=8 \
+       --nproc_per_node=2 \
        --master_port=$((RANDOM + 10000)) \
        tools/train_net.py \
-       --config-file configs/fcos_nuscenes/fcos_imprv_R_101_FPN_1x_ATTMIX_135_Circle_07.yaml \
+       --config-file configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml \
        DATALOADER.NUM_WORKERS 2 \
        OUTPUT_DIR tmp/fcos_imprv_R_50_FPN_1x
 ```
 
 ## Prepare Test
 
-The following command line will test fcos_imprv_R_101_FPN_1x_ATTMIX_135_Circle_07.yaml on 8 GPUs:
+### Checkpoints
+- You should download checkpoints and move to `your_project/ckpts`
+
+1. [fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml](https://pan.baidu.com/s/1XO64KxpGqfLhlPY6McXkpQ), 提取码：`bp0h`, followings are checkpoints performance log:
+
+```bash
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.662
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.894
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.728
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.484
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.649
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.775
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.125
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.616
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.739
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.602
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.735
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.822
+Maximum f-measures for classes:
+[0.837035054856837]
+Score thresholds for classes (used in demos for visualization purposes):
+[0.5025295615196228]
+2023-06-28 08:26:46,891 fcos_core.inference INFO: OrderedDict([('bbox', OrderedDict([('AP', 0.6622987526290007), ('AP50', 0.893780659927815), ('AP75', 0.7280925007150355), ('APs', 0.48447696873607443), ('APm', 0.6485033130717023), ('APl', 0.7745259549635619)]))])
+INFO:fcos_core.inference:OrderedDict([('bbox', OrderedDict([('AP', 0.6622987526290007), ('AP50', 0.893780659927815), ('AP75', 0.7280925007150355), ('APs', 0.48447696873607443), ('APm', 0.6485033130717023), ('APl', 0.7745259549635619)]))])
+```
+
+The following command line will test fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07 on 2 GPUs:
 
 ```shell
-
 python -m torch.distributed.launch \
        --nproc_per_node=8  
        --master_port=$((RANDOM + 10000)) \
        tools/test_epoch.py \
        --config-file configs/fcos_nuscenes/fcos_imprv_R_101_FPN_1x_ATTMIX_135_Circle_07.yaml \
-       --checkpoint-file tmp/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07/model_0010000.pth \ 
+       --checkpoint-file ckpts/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.pth \ 
        OUTPUT_DIR tmp/fcos_imprv_R_101_FPN_1x_ATTMIX_135_Circle_07
 ```
 

@@ -126,7 +126,7 @@ def main():
     )
     parser.add_argument(
         "--norm-info-folder",
-        default="/home/naca/Projects/dataset/nuscenes/v1.0-trainval/norm_info/",
+        default="/home/naca/Data/nuScenes/v1.0-trainval/norm_info/",
         metavar="FILE",
         help="path to config file",
         type=str,
