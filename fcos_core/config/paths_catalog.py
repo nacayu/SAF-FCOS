@@ -7,16 +7,16 @@ import os
 class DatasetCatalog(object):
     DATASETS = {
         "nuscenes_train_cocostyle": {
-            "img_dir": "/home/naca/Projects/dataset/nuscenes",
-            "ann_file": "/home/naca/Projects/dataset/nuscenes/v1.0-trainval/gt_fcos_coco_train.json"
+            "img_dir": "/home/naca/Data/nuScenes",
+            "ann_file": "/home/naca/Data/nuScenes/v1.0-trainval/gt_fcos_coco_train.json"
         },
         "nuscenes_val_cocostyle": {
-            "img_dir": "/home/naca/Projects/dataset/nuscenes",
-            "ann_file": "/home/naca/Projects/dataset/nuscenes/v1.0-trainval/gt_fcos_coco_val.json"
+            "img_dir": "/home/naca/Data/nuScenes",
+            "ann_file": "/home/naca/Data/nuScenes/v1.0-trainval/gt_fcos_coco_val.json"
         },
         "nuscenes_test_cocostyle": {
-            "img_dir": "/home/naca/Projects/dataset/nuscenes",
-            "ann_file": "/home/naca/Projects/dataset/nuscenes/v1.0-trainval/gt_fcos_coco_val.json"
+            "img_dir": "/home/naca/Data/nuScenes",
+            "ann_file": "/home/naca/Data/nuScenes/v1.0-trainval/gt_fcos_coco_val.json"
         }
     }
 

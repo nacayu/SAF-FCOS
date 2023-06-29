@@ -16,9 +16,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Convert dataset')
     parser.add_argument('--dataset', help="convert dataset to coco-style", default='nuscenes', type=str)
     parser.add_argument('--datadir', help="data dir for annotations to be converted",
-                        default='/home/naca/Projects/dataset/nuscenes', type=str)
+                        default='/home/naca/Data/nuScenes', type=str)
     parser.add_argument('--outdir', help="output dir for json files",
-                        default='/home/naca/Projects/dataset/nuscenes/v1.0-trainval', type=str)
+                        default='/home/naca/Data/nuScenes/v1.0-trainval', type=str)
 
     return parser.parse_args()
 

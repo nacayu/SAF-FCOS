@@ -87,7 +87,7 @@ def vis_one_image(im, im_name, output_dir, boxes, thresh=0.508, dpi=200, box_alp
 
 
 def run(dic):
-    img = cv2.imread(os.path.join('/home/naca/Projects/dataset/nuscenes', dic["file_name"]), cv2.IMREAD_COLOR)[:, :, ::-1]
+    img = cv2.imread(os.path.join('/home/naca/Data/nuScenes', dic["file_name"]), cv2.IMREAD_COLOR)[:, :, ::-1]
     basename = os.path.splitext(os.path.basename(dic["file_name"]))[0]
     image_id = dic['id']
     cls_box_i = []

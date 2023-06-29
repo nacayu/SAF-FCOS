@@ -15,9 +15,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Convert dataset')
     parser.add_argument('--dataset', help="convert dataset to coco-style", default='nuscenes', type=str)
     parser.add_argument('--datadir', help="data dir for annotations to be converted",
-                        default='/home/naca/Projects/dataset/nuscenes', type=str)
+                        default='/home/naca/Data/nuScenes', type=str)
     parser.add_argument('--outdir', help="output dir for json files",
-                        default='/home/naca/Projects/dataset/nuscenes/v1.0-trainval', type=str)
+                        default='/home/naca/Data/nuScenes/v1.0-trainval', type=str)
 
     return parser.parse_args()
 
@@ -45,7 +45,9 @@ def calculate_mean_std_of_img(img):
 
 
 def extract(data_dir, out_dir):
-    """merge detection results and convert results to COCO"""
+    """
+    merge all radar pc image norm and std values for [imagepc_01, imagepc_03..., imagepc_11]
+    """
 
     # mini split used for validation
     nusc_mini = NuScenes(version='v1.0-mini', dataroot=data_dir, verbose=True)

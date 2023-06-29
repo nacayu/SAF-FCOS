@@ -64,7 +64,7 @@ class FCOSPostProcessor(torch.nn.Module):
         # 在NMS前先根据分类得分进行筛选，选取大于0.05的box
         # (N, H*W, C) bool True or False
         candidate_inds = box_cls > self.pre_nms_thresh
-        # [N, ], 每个point类别未知, pre_nms_top_n[i]为point_i的所有类别分数 > score的个数 * N个图片的points数量, 一个特征点位置可能在多个类别上都成为候选
+        # [N, ], 每个point类别未知, pre_nms_top_n[i]为point_i的所有类别分数 > pre_nms_thresh的个数, 一个特征点位置可能在多个类别上都成为候选
         pre_nms_top_n = candidate_inds.view(N, -1).sum(1)
         # [N, ] 限制候选目标数量，默认最多是1000个
         pre_nms_top_n = pre_nms_top_n.clamp(max=self.pre_nms_top_n)
@@ -88,7 +88,7 @@ class FCOSPostProcessor(torch.nn.Module):
             per_box_regression = per_box_regression[per_box_loc]
             # points位置
             per_locations = locations[per_box_loc]
-            # 
+            # 包含了多次同一个点的位置, (per_candidate_inds.sum(),4) 候选特征点回归的预测结果
             per_pre_nms_top_n = pre_nms_top_n[i]
             # 若当前候选目标(score > 0.05)数量(包括一个点在多个类别上成为候选)超过了上限值则进行截断
             if per_candidate_inds.sum().item() > per_pre_nms_top_n.item():
@@ -108,6 +108,7 @@ class FCOSPostProcessor(torch.nn.Module):
             h, w = image_sizes[i]
             boxlist = BoxList(detections, (int(w), int(h)), mode="xyxy")
             boxlist.add_field("labels", per_class)
+            # 得分数值尺度的还原
             boxlist.add_field("scores", torch.sqrt(per_box_cls))
             # 将bbox(四个角坐标)限制在输入图像尺寸范围内
             boxlist = boxlist.clip_to_image(remove_empty=False)

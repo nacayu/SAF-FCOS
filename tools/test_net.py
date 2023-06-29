@@ -28,7 +28,7 @@ def main():
     )
     parser.add_argument(
         "--checkpoint-file",
-        default="tmp/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07/model_0010000.pth",
+        default="ckpts/model_0040000.pth",
         metavar="FILE",
         help="path to config file",
     )
@@ -70,8 +70,8 @@ def main():
     checkpointer = DetectronCheckpointer(cfg, model)
     model_name = args.checkpoint_file.split('/')[-1]
     # uncomment following if you want to load pretrained model
-    # _ = checkpointer.load(args.checkpointer_file)
-    _ = checkpointer.load()
+    _ = checkpointer.load(args.checkpoint_file)
+    # _ = checkpointer.load()
     
 
     iou_types = ("bbox",)

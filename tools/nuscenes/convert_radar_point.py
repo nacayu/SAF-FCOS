@@ -159,6 +159,10 @@ def map_point_cloud_to_image(point_sensor_token, camera_token, min_dist=1.0):
 
 
 def draw_pc_image(pc, save_path, radius, im_height=900, im_width=1600):
+    """
+    1. generate pc image
+    2. generate pc norm and std values per pc image
+    """
     img_b = np.zeros((im_height, im_width), np.uint8)
     img_g = np.zeros((im_height, im_width), np.uint8)
     img_r = np.zeros((im_height, im_width), np.uint8)
@@ -213,7 +217,7 @@ def draw_pc_image(pc, save_path, radius, im_height=900, im_width=1600):
     std = np.reshape(stds, [3, 1])
     norm_info['mean'] = (mean[0, 0], mean[1, 0], mean[2, 0])
     norm_info['std'] = (std[0, 0], std[1, 0], std[2, 0])
-    # save norm info
+    # save norm info per pc image
     with open(norm_save_path, 'w') as f:
         json.dump(norm_info, f, sort_keys=True, indent=4)
 
@@ -257,8 +261,8 @@ def generate_record(ann_rec: dict,
 
 def get_pc_info(sample_data_token):
     """
-    Get the 2D annotation records for a given `sample_data_token`.
-    :param sample_data_token: Sample data token belonging to a keyframe.
+    针对每个sample雷达, 筛选生成对应的新pcd文件于pc/下面
+        
     """
 
     # get sample data
@@ -271,12 +275,13 @@ def get_pc_info(sample_data_token):
     # get radar data token
     point_sensor_token = s_rec['data']['RADAR_FRONT']
     pc_rec = nusc.get('sample_data', point_sensor_token)
+    # saved path: nuScenes/pc/
     pcd_path = os.path.join(nusc.dataroot, pc_rec['filename'].replace('samples', 'pc'))
     pcd_dir = os.path.dirname(pcd_path)
     if not os.path.isdir(pcd_dir):
         os.makedirs(pcd_dir)
     
-    # generate new pcd file *.pcd: /path/to/your dataset/pc/
+    # generate new pcd file with limitations,  *.pcd: /path/to/your dataset/pc/
     if not os.path.isfile(pcd_path):
         # map radar points from radar sensor to camera to get point 2D position(u, v) in pixel coordinate
         # pc.shape: [18, n]
@@ -290,7 +295,7 @@ def get_pc_info(sample_data_token):
                 line_info = ' '.join(line_info)
                 f.write(line_info + '\n')
 
-    # generate new record json file: /path/to/your dataset/json/
+    # generate recored file corresponding to sample contains dict: new pc file path, sample_data_token...
     # filename format:  'json/CAM_FRONT/n015-2018-07-24-11-22-45+0800__CAM_FRONT__1532402927612460.json'
     cam_front_json_path = os.path.join(nusc.dataroot,
                                        sd_rec['filename'].replace('samples', 'json').replace('jpg', 'json'))
@@ -310,9 +315,10 @@ def get_pc_info(sample_data_token):
 
         repro_recs = []
 
-        # re-generate annotation json file for one sample record(corresponding 3D Bbox inside image pixel plane)
+        # 重新按照要求生成sample_token的新recored文件(corresponding 3D Bbox inside image pixel plane)
         for ann_rec in ann_recs:
-
+            
+            # annotations labled in world coordinate
             ann_rec['sample_annotation_token'] = ann_rec['token']
             ann_rec['sample_data_token'] = sample_data_token
 
@@ -341,8 +347,7 @@ def get_pc_info(sample_data_token):
             if final_coords is None:
                 continue
 
-            # Generate dictionary record to be included in the .json file.
-            # Attention: pc_rec['filename] reference to new generated pcd file in /pc
+            # only annotations within images could be appended to repro_recs
             repro_rec = generate_record(ann_rec, sample_data_token, sd_rec['filename'],
                                         os.path.join(nusc.dataroot, pc_rec['filename'].replace('samples', 'pc')))
             repro_recs.append(repro_rec)
@@ -382,6 +387,12 @@ def convert_pcd_file(sample_data_token, radius):
 
 
 def run():
+    """
+    1. 生成新pcd文件: [x, y, z] -> [u, v]
+    2. 生成新recored文件: dict(filename:, pcd_file:....)
+    3. 生成点云render图像与norm_info
+    4. 集成所有sample的新recored文件(第二步), 生成所有场景的image_pc_annotations
+    """
     # Get tokens for all camera images.
     sample_data_camera_tokens = [s['token'] for s in nusc.sample_data if (s['channel'] == 'CAM_FRONT') and
                                  s['is_key_frame']]
@@ -390,7 +401,7 @@ def run():
     print("Generating 2D re-projections of the nuScenes dataset")
     num_threads = CPU_COUNT
     num_tokens = len(sample_data_camera_tokens)
-    
+    # 多进程处理每个token生成new point file
     with futures.ProcessPoolExecutor(max_workers=num_threads) as executor:
         # 任务列表fs，调用get_pc_info函数处理一个样本数据的token
         fs = [executor.submit(get_pc_info, token) for token in
@@ -404,7 +415,7 @@ def run():
     # for token in tqdm.tqdm(sample_data_camera_tokens):
     #     get_pc_info(token)
 
-    # Convert radar point as image and save every radar image norm info as json file
+    # Convert radar point as image and save every radar image, norm info as json file per radar pc image
     print("Generating 2D radar image by depth vx vy")
     num_threads = CPU_COUNT
     num_tokens = len(sample_data_camera_tokens)
@@ -416,7 +427,7 @@ def run():
                 # Write progress to error so that it can be seen
                 print_progress(i, num_tokens, prefix=nuScenes_version, suffix='Done ', bar_length=40)
 
-    # Merge all CAM_FRONT annotations json files as a single json file: /path/to/your dataset/v1.0-trainval/
+    # 把刚才生成每个sample的new record合并为一个: /path/to/your dataset/v1.0-trainval/image_pc_annotations.json
     if not os.path.isfile(os.path.join(nusc.dataroot, 'v1.0-trainval', 'image_pc_annotations.json')):
         # Save to a .json file.
         print("Combine the individual json files")
@@ -442,7 +453,7 @@ def run():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Convert radar point',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--dataroot', type=str, default='"/home/naca/Data/nuScenes/',
+    parser.add_argument('--dataroot', type=str, default="/home/naca/Data/nuScenes/",
                         help="Path where nuScenes is saved.")
     parser.add_argument('--version', type=str, default='v1.0-trainval')
     parser.add_argument('--filename', type=str, default='image_pc_annotations.json')

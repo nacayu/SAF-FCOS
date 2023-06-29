@@ -8,7 +8,7 @@
 
 ### Requirements:
 
-- PyTorch >= 1.8.0 Installation instructions can be found in https://pytorch.org/get-started/locally/.
+- PyTorch 1.9.1 Installation instructions can be found in https://pytorch.org/get-started/locally/.
 - torchvision
 - cocoapi
 - yacs
@@ -36,10 +36,8 @@ pip install ninja yacs cython matplotlib tqdm
 # follow PyTorch installation in https://pytorch.org/get-started/locally/
 # we give the instructions for CUDA 10.2
 conda install pytorch==1.9.1 torchvision==0.10.1 torchaudio==0.9.1 cudatoolkit=11.3 -c pytorch -c conda-forge
-export INSTALL_DIR=$PWD
 
 # install pycocotools. Please make sure you have installed cython.
-cd $INSTALL_DIR
 pip install pycocotools
 
 # install nuScenes api.
@@ -52,8 +50,9 @@ pip install scikit-image
 pip install opencv-python
 
 # install SAF-FCOS
-cd $INSTALL_DIR
-git clone https://github.com/Singingkettle/SAF-FCOS.git
+cd /path/to/your_own/
+git clone https://github.com/nacayu/SAF-FCOS.git
+# or use source code(zip) directly
 cd SAF-FCOS
 
 # the following will install the lib with
@@ -63,8 +62,9 @@ cd SAF-FCOS
 python setup.py build develop --no-deps
 
 
-unset INSTALL_DIR
-
 # or if you are on macOS
 # MACOSX_DEPLOYMENT_TARGET=10.9 CC=clang CXX=clang++ python setup.py build develop
 ```
+### Successfully installed like followings: 
+
+![Alt text](image/installation.png)

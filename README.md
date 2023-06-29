@@ -53,7 +53,6 @@ for f in *.tar; do tar -xvf "$f"; done
 
 ## Generate Data
 1. Data: you should merge all 10 blobs and re-organize the dataset into the following format:
-
 ![Alt text](image/pre_data_arch.png)
 
 2. Convert the radar pcd file as image:
@@ -103,6 +102,42 @@ python tools/nuscenes/generate_2d_annotations_by_fcos.py --datadir ~/Data/nuScen
 6. Final data architecture
 
 ![Alt text](image/generated_data_arch.png)
+
+```
+Home/naca/Data
+├── nuScenes/
+|   |——fcos/
+|   |——imagepc_01/
+|   |   |——RADAR_FRONT/
+|   |   |  |——*json
+|   |   |  |——*.png
+|   |——imagepc_03/
+|   |   |——RADAR_FRONT/
+|   |   |  |——*json
+|   |   |  |——*.png
+|...
+|   |——pc/
+|   |   |——RADAR_FRONT/
+|   |   |  |——*.pcd
+|   |——json/
+|   |   |——CAM_FRONT/
+|   |   |  |——*.json
+│   │   ├── maps/
+│   │   ├── samples/
+│   │   ├── sweeps/
+│   │   ├── v1.0-mini/
+|   |   ├── v1.0-trainval/
+|   |   | ├── *.json
+|   |   | ├── gt_fcos_coco_train.json
+|   |   | ├── gt_fcos_coco_val.json
+|   |   | ├── image_pc_annotations.json
+|   |   | ├── norm_info/
+|  |    |   ├── norm_param_gt_fcos_coco_train_03.json
+|  |    |   ├── norm_param_gt_fcos_coco_train_05.json
+|  |    |   ├── norm_param_gt_fcos_coco_train_07.json
+|  |    |   ├── norm_param_gt_fcos_coco_train_09.json
+|———————————|—— norm_param_gt_fcos_coco_train_11.json
+```
 
 ## Network Architecture
 ### Backbone
