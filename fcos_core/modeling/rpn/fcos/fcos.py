@@ -118,6 +118,7 @@ class FCOSHead(torch.nn.Module):
                 bbox_pred = F.relu(bbox_pred)
                 if self.training:
                     bbox_reg.append(bbox_pred)
+                # bbox_reg x stride for test
                 else:
                     bbox_reg.append(bbox_pred * self.fpn_strides[l])
             else:

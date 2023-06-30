@@ -168,16 +168,16 @@ python -m torch.distributed.launch \
 ## Network Architecture
 
 ### Radar branch 
-![Alt text](image.png)
+![Alt text](image/radar_branch.png)
 
 ### Image branch & Fusion branch
-![Alt text](image-1.png)
+![Alt text](image/image&fusion_branch.png)
 
 ### make_fcos_loss_evaluator
 
-![Alt text](image-5.png)
+![Alt text](image/fcos_loss_evaluator.png)
 
-![Alt text](image-3.png)
+![Alt text](image/center_sampling.png)
 
 ## Prepare Test
 
@@ -220,7 +220,7 @@ python -m torch.distributed.launch \
 ```
 
 ### Test pipeline
-![Alt text](image-6.png)
+![Alt text](image/test_pipeline.png)
 
 ## Citations
 

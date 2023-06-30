@@ -73,13 +73,15 @@ class FCOSPostProcessor(torch.nn.Module):
         box_cls = box_cls * centerness[:, :, None]
         
         results = []
+        # N images
         for i in range(N):
             per_box_cls = box_cls[i]
             per_candidate_inds = candidate_inds[i]
             per_box_cls = per_box_cls[per_candidate_inds]
+            # 得到每个center points对应类别和位置
             # [per_candidate_inds.sum(), 2]: index 0 indicate points position, index 1 indicate class 
             per_candidate_nonzeros = per_candidate_inds.nonzero()
-            #  points点索引: (per_candidate_inds.sum(), )
+            #  center points位置索引: (per_candidate_inds.sum(), )
             per_box_loc = per_candidate_nonzeros[:, 0]
             # +1是因为网络结构中，在分类预测的卷积层输出通道数里并未包含背景类，因此这里将0留给背景
             per_class = per_candidate_nonzeros[:, 1] + 1
@@ -128,16 +130,12 @@ class FCOSPostProcessor(torch.nn.Module):
         Returns:
             boxlists (list[BoxList]): the post-processed anchors, after
                 applying box decoding and NMS
-        """
-        # locations, box_cls, box_regression, centerness的长度都等于特征层数
-        # 而image_sizes的长度等于一个batch中的图片数量
-        # 注意，返回的每个预测结果封装在BoxList()实例中，通过这个实例的属性可以获取
-        # 对应的bbox、类别以及分数
-        
+        """      
         # 依次处理各个特征层的预测结果
         sampled_boxes = []
         for _, (l, o, b, c) in enumerate(zip(locations, box_cls, box_regression, centerness)):
-            # 返回list，代表各图在单个特征层的预测结果
+            # 返回的每个预测结果封装在BoxList()实例中，通过这个实例的属性可以获取
+            # 对应的bbox、类别以及分数
             sampled_boxes.append(
                 self.forward_for_single_feature_map(
                     l, o, b, c, image_sizes
@@ -146,6 +144,7 @@ class FCOSPostProcessor(torch.nn.Module):
         # get per images boxlists from multi-level(Re-group)
         boxlists = list(zip(*sampled_boxes))
         # 将一张图中所有特征层的预测结果拼接在一起，使得每张图的预测结果就是1个BoxList实例
+        # list(boxlist1()...)
         boxlists = [cat_boxlist(boxlist) for boxlist in boxlists]
         if not self.bbox_aug_enabled:
             boxlists = self.select_over_all_levels(boxlists)
