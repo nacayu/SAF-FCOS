@@ -262,9 +262,7 @@ def generate_record(ann_rec: dict,
 def get_pc_info(sample_data_token):
     """
     针对每个sample雷达, 筛选生成对应的新pcd文件于pc/下面
-        
     """
-
     # get sample data
     sd_rec = nusc.get('sample_data', sample_data_token)
 
@@ -391,7 +389,7 @@ def run():
     1. 生成新pcd文件: [x, y, z] -> [u, v]
     2. 生成新recored文件: dict(filename:, pcd_file:....)
     3. 生成点云render图像与norm_info
-    4. 集成所有sample的新recored文件(第二步), 生成所有场景的image_pc_annotations
+    4. 集成所有sample的新recored文件(第二步), 生成所有场景的image_pc_annotations.json
     """
     # Get tokens for all camera images.
     sample_data_camera_tokens = [s['token'] for s in nusc.sample_data if (s['channel'] == 'CAM_FRONT') and

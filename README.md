@@ -53,6 +53,7 @@ for f in *.tar; do tar -xvf "$f"; done
 
 ## Generate Data
 1. Data: you should merge all 10 blobs and re-organize the dataset into the following format:
+
 ![Alt text](image/pre_data_arch.png)
 
 2. Convert the radar pcd file as image:
@@ -60,6 +61,8 @@ for f in *.tar; do tar -xvf "$f"; done
 ```shell
 python tools/nuscenes/convert_radar_point.py --dataroot ~/Data/nuScenes
 ```
+
+![Alt text](./image/data_processing.png)
 
 3. Calculate the norm info of radar images:
 
@@ -99,7 +102,7 @@ unzip fcos.zip
 python tools/nuscenes/generate_2d_annotations_by_fcos.py --datadir ~/Data/nuScenes --outdir ~/Data/nuScenes/v1.0-trainval
 ```
 
-6. Final data architecture
+### Final data architecture
 
 ![Alt text](image/generated_data_arch.png)
 
@@ -138,13 +141,14 @@ Home/naca/Data
 |  |    |   ├── norm_param_gt_fcos_coco_train_09.json
 |———————————|—— norm_param_gt_fcos_coco_train_11.json
 ```
+### Some key files' screen shot
+- image_pc_annotations.json
 
-## Network Architecture
-### Backbone
+![Alt text](./image/image_pc_annotations.png)
 
-### FPN
+- /norm_info/*.json
 
-### Detection Head
+![Alt text](./image/norm_info_files.png)
 
 ## Prepare training
 
@@ -160,6 +164,20 @@ python -m torch.distributed.launch \
        DATALOADER.NUM_WORKERS 2 \
        OUTPUT_DIR tmp/fcos_imprv_R_50_FPN_1x
 ```
+
+## Network Architecture
+
+### Radar branch 
+![Alt text](image.png)
+
+### Image branch & Fusion branch
+![Alt text](image-1.png)
+
+### make_fcos_loss_evaluator
+
+![Alt text](image-5.png)
+
+![Alt text](image-3.png)
 
 ## Prepare Test
 
@@ -193,13 +211,16 @@ The following command line will test fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07
 
 ```shell
 python -m torch.distributed.launch \
-       --nproc_per_node=8  
+       --nproc_per_node=2  
        --master_port=$((RANDOM + 10000)) \
        tools/test_epoch.py \
-       --config-file configs/fcos_nuscenes/fcos_imprv_R_101_FPN_1x_ATTMIX_135_Circle_07.yaml \
+       --config-file configs/fcos_nuscenes/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml \
        --checkpoint-file ckpts/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.pth \ 
-       OUTPUT_DIR tmp/fcos_imprv_R_101_FPN_1x_ATTMIX_135_Circle_07
+       OUTPUT_DIR tmp/fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07
 ```
+
+### Test pipeline
+![Alt text](image-6.png)
 
 ## Citations
 

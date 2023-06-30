@@ -34,7 +34,7 @@ def xyxy_to_polygn(xyxy_box):
 
 def run(data_dir, out_dir):
     """
-    Fuction: merge detection results and convert results to COCO from image_pc_annotations.json
+    Fuction: merge detection results and convert results to COCO
     generate: gt_fcos_coco_train.json, gt_fcos_coco_val.json
     """
     # Load mini dataset, test dataset and dataset, the mini dataset is used as valid dataset
@@ -74,9 +74,6 @@ def run(data_dir, out_dir):
         images = []
         annotations = []
         for sample_data_token in token_list:
-            # if len(images) % 50 == 0:
-            #     print("Processed %s images, %s annotations" % (
-            #         len(images), len(annotations)))
             try:
                 sample_data = nusc.get('sample_data', sample_data_token)
                 sample = nusc.get('sample', sample_data['sample_token'])
@@ -89,7 +86,8 @@ def run(data_dir, out_dir):
                 pc_rec = None
             if point_sensor_token is None:
                 continue
-
+            
+            # generate images
             image = dict()
             image['id'] = img_id
             img_id += 1
@@ -106,6 +104,7 @@ def run(data_dir, out_dir):
                 print(pc_image_path)
             images.append(image)
 
+            # open resnet generated 2d annotation as ground truth
             with open(os.path.join(data_dir, image['file_name'].replace('samples', 'fcos').replace('jpg', 'txt')),
                       'r') as f:
                 detection_list = f.readlines()
@@ -122,6 +121,7 @@ def run(data_dir, out_dir):
                         line_gt = [float(x) for x in line_str]
                         xyxy_box = line_gt[1:]
                         legal_box = False
+                        # whether points inside bbox
                         for pc_index in range(pc.shape[1]):
                             point = pc[:, pc_index]
                             if (point[0] > xyxy_box[0]) and (point[0] < xyxy_box[2]) and (

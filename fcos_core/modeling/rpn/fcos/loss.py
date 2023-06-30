@@ -118,7 +118,7 @@ class FCOSLossComputation(object):
             [512, INF],
         ]
         expanded_object_sizes_of_interest = []
-        # 不同尺度特征层分配不同大小的object size模板大小: feature map越小分配size越大
+        # 不同尺度特征层分配不同大小的object size范围: feature map越小分配size越大
         for l, points_per_level in enumerate(points):
             # 五个size按照feature level分别分配
             object_sizes_of_interest_per_level = \
@@ -132,11 +132,12 @@ class FCOSLossComputation(object):
         num_points_per_level = [len(points_per_level) for points_per_level in points]
         self.num_points_per_level = num_points_per_level
         points_all_level = torch.cat(points, dim=0)
-        # 获取每个points分配的label和bbox
+        
+        # 基于center_sampling和 regress_ranges原则得到每个点样本类别
         labels, reg_targets = self.compute_targets_for_locations(
             points_all_level, targets, expanded_object_sizes_of_interest
         )
-        # 将每个图片的label按照level分割
+        # 将每个图片的label按照level分割: 便于encoder中除以stride
         for i in range(len(labels)):
             labels[i] = torch.split(labels[i], num_points_per_level, dim=0)
             reg_targets[i] = torch.split(reg_targets[i], num_points_per_level, dim=0)
@@ -152,6 +153,8 @@ class FCOSLossComputation(object):
                 reg_targets_per_im[level]
                 for reg_targets_per_im in reg_targets
             ], dim=0)
+            
+            # encoder
             # 最终计算的reg_targets需要除以对应level的strides
             if self.norm_reg_targets:
                 reg_targets_per_level = reg_targets_per_level / self.fpn_strides[level]
@@ -164,7 +167,7 @@ class FCOSLossComputation(object):
          基于 center_sampling 和 regress_ranges采样正负样本:
          - 如果不开启中心采样，那么 gt bbox 内部的所有点都属于正样本
          - 一旦开启了中心采样，则需要依据采样半径计算出每个 gt bbox 内部哪些点属于正样本
-         - 基于center_sampling 确定最终正样本 第 4 步没有考虑 FPN 的按照 scale 分配样本的特性，将所有 gt bbox 都广播到每个输出层，
+         - 基于center_sampling 没有考虑 FPN 的按照 scale 分配样本的特性，将所有 gt bbox 都广播到每个输出层
          - 基于 regress_ranges 通过 regree_ranges 进一步按照 scale 原则进行区分
          
          正样本要符合两个条件：
@@ -181,12 +184,11 @@ class FCOSLossComputation(object):
             bboxes = targets_per_im.bbox
             labels_per_im = targets_per_im.get_field("labels")
             area = targets_per_im.area()
-            # regression ranges computation: 计算原图上坐标点和当前图片所有 gt bbox 4 条边的距离
+            # 计算原图上center points和当前图片所有 gt bbox 4 条边的距离
             l = xs[:, None] - bboxes[:, 0][None]
             t = ys[:, None] - bboxes[:, 1][None]
             r = bboxes[:, 2][None] - xs[:, None]
             b = bboxes[:, 3][None] - ys[:, None]
-            # 表示每个点距离所有 gt bbox 4条边的距离值
             reg_targets_per_im = torch.stack([l, t, r, b], dim=2)
             # get mask for points whether inside center sampling, shape: [num_points, num_gt_bboxes]
             if self.center_sampling_radius > 0:
@@ -246,7 +248,7 @@ class FCOSLossComputation(object):
         """
         N = box_cls[0].size(0)
         num_classes = box_cls[0].size(1)
-        # get per points labels and regression gt
+        # get per points labels and regression gt (level based)
         labels, reg_targets = self.prepare_targets(locations, targets)
 
         box_cls_flatten = []
@@ -261,7 +263,7 @@ class FCOSLossComputation(object):
             labels_flatten.append(labels[l].reshape(-1))
             reg_targets_flatten.append(reg_targets[l].reshape(-1, 4))
             centerness_flatten.append(centerness[l].reshape(-1))
-
+        # cat along on  feature levels
         box_cls_flatten = torch.cat(box_cls_flatten, dim=0)
         box_regression_flatten = torch.cat(box_regression_flatten, dim=0)
         centerness_flatten = torch.cat(centerness_flatten, dim=0)
@@ -269,7 +271,7 @@ class FCOSLossComputation(object):
         reg_targets_flatten = torch.cat(reg_targets_flatten, dim=0)
         # ignore labels == 0
         pos_inds = torch.nonzero(labels_flatten > 0).squeeze(1)
-
+        # select box, reg, center-ness
         box_regression_flatten = box_regression_flatten[pos_inds]
         reg_targets_flatten = reg_targets_flatten[pos_inds]
         centerness_flatten = centerness_flatten[pos_inds]
@@ -284,11 +286,12 @@ class FCOSLossComputation(object):
         reg_loss: IoU loss with centerness
         centerness_loss: BCE loss
         """
+        # calculate for all boxes
         cls_loss = self.cls_loss_func(
             box_cls_flatten,
             labels_flatten.int()
         ) / num_pos_avg_per_gpu
-
+        # calculate for positive boxes
         if pos_inds.numel() > 0:
             centerness_targets = self.compute_centerness_targets(reg_targets_flatten)
 

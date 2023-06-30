@@ -36,10 +36,11 @@ def train(cfg, local_rank, distributed):
         assert is_pytorch_1_1_0_or_later(), \
             "SyncBatchNorm is only available in pytorch >= 1.1.0"
         model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
-
+    # various optimization algorithms
     optimizer = make_optimizer(cfg, model)
+    # dynamically adjust the learning rate of the optimizer
     scheduler = make_lr_scheduler(cfg, optimizer)
-
+    # distributed training
     if distributed:
         model = torch.nn.parallel.DistributedDataParallel(
             model, device_ids=[local_rank], output_device=local_rank,
@@ -53,6 +54,7 @@ def train(cfg, local_rank, distributed):
     output_dir = cfg.OUTPUT_DIR
 
     save_to_disk = get_rank() == 0
+    # load and save the model, optimizer and scheduler
     checkpointer = DetectronCheckpointer(
         cfg, model, optimizer, scheduler, output_dir, save_to_disk
     )

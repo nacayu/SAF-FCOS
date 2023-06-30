@@ -62,6 +62,9 @@ ResNet101FPNStagesTo5 = tuple(
 class ResNet(nn.Module):
     def __init__(self, cfg):
         super(ResNet, self).__init__()
+        """
+        image branch: stem, layer1,..., layern
+        """
         # stem: first layer
         stem_module = _STEM_MODULES[cfg.MODEL.RESNETS.STEM_FUNC]
         # stages parameters used for Bottleneck
@@ -111,7 +114,9 @@ class ResNet(nn.Module):
             self.stages.append(name)
             self.return_features[name] = stage_spec.return_features
 
-        # construct every Bottleneck layer for ResNet radar branch
+        """
+        Radar branch
+        """
         
         # if only detect with image
         if cfg.MODEL.BACKBONE.FUSION == "IMG":
@@ -145,6 +150,9 @@ class ResNet(nn.Module):
                     "with_modulated_dcn": cfg.MODEL.RESNETS.WITH_MODULATED_DCN,
                     "deformable_groups": cfg.MODEL.RESNETS.DEFORMABLE_GROUPS,
                 })
+            """
+            Fusion branch
+            """
             # choose radar and image features fusion method such as FusionAttMix, ADD, MUL, etc.
             # FusionAttMix: use multi-kernals to extract radar features and concatenate, then use torch.mul(im_x, ra_x) to generate fusion features
             fusion_model = _FUSION_BLOCKS[cfg.MODEL.BACKBONE.FUSION]
