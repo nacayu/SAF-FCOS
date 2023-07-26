@@ -140,8 +140,11 @@ def extract(data_dir, out_dir):
             norm_param['pc_im_means'] = [item for item in pc_im_means]
             norm_param['pc_im_stds'] = [item for item in pc_im_stds]
             # "dataset/nuscenes/v1.0-trainval/norm_info/norm_param_gt_fcos_coco_train_01.json"
-            with open(os.path.join(out_dir, 'norm_info', 'norm_param_' + json_name % (data_set, radius)),
-                      'w') as outfile:
+            outfile_path = os.path.join(out_dir, 'norm_info', 'norm_param_' + json_name % (data_set, radius))
+            outfile_dir_path = os.path.dirname(outfile_path)
+            if not os.path.isdir(outfile_dir_path):
+                os.makedirs(outfile_dir_path)
+            with open(outfile_path,'w') as outfile:
                 outfile.write(json.dumps(norm_param))
 
 
