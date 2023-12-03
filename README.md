@@ -4,6 +4,7 @@
 The full paper is available at: [https://www.mdpi.com/1424-8220/20/4/956](https://www.mdpi.com/1424-8220/20/4/956).
 
 ## Arch
+
 ![Alt text](image/architecture.png)
 
 ## Abstract: 
@@ -32,6 +33,7 @@ Please check [INSTALL.md](INSTALL.md) for installation instructions.
 ## Download Data
 
 ### Version1: download from opendatalab(推荐)
+
 [opendatalab reference](https://opendatalab.com/nuScenes/cli)
 ![Alt text](image/opendatalab.png)
 
@@ -52,6 +54,7 @@ for f in *.tar; do tar -xvf "$f"; done
 ```
 
 ## Generate Data
+
 1. Data: you should merge all 10 blobs and re-organize the dataset into the following format:
 
 ![Alt text](image/pre_data_arch.png)
@@ -84,9 +87,10 @@ python tools/nuscenes/extract_pc_image_norm_info_from_image.py --datadir ~/Data/
    For users not in China, please download
    from [google drive](https://drive.google.com/file/d/12SXDFUWpTPUKaWTn8yuoG-_CHaXVVGB7/view?usp=sharing).  
    For users in China, please download from [baidu drive](https://pan.baidu.com/s/11NNYpmBbs5sSqSsFxl-z7Q).
+
    ```shell
-   链接：https://pan.baidu.com/s/11NNYpmBbs5sSqSsFxl-z7Q 
-   提取码：6f1x 
+链接：https://pan.baidu.com/s/11NNYpmBbs5sSqSsFxl-z7Q 
+提取码：6f1x 
    ```
 
    If you use our generated txt files, please:
@@ -141,7 +145,9 @@ Home/naca/Data
 |  |    |   ├── norm_param_gt_fcos_coco_train_09.json
 |———————————|—— norm_param_gt_fcos_coco_train_11.json
 ```
+
 ### Some key files' screen shot
+
 - image_pc_annotations.json
 
 ![Alt text](./image/image_pc_annotations.png)
@@ -168,9 +174,11 @@ python -m torch.distributed.launch \
 ## Network Architecture
 
 ### Radar branch 
+
 ![Alt text](image/radar_branch.png)
 
 ### Image branch & Fusion branch
+
 ![Alt text](image/image&fusion_branch.png)
 
 ### make_fcos_loss_evaluator
@@ -182,6 +190,7 @@ python -m torch.distributed.launch \
 ## Prepare Test
 
 ### Checkpoints
+
 - You should download checkpoints and move to `your_project/ckpts`
 
 1. [fcos_imprv_R_50_FPN_1x_ATTMIX_135_Circle_07.yaml](https://pan.baidu.com/s/1XO64KxpGqfLhlPY6McXkpQ), 提取码：`bp0h`, followings are checkpoints performance log:
@@ -220,28 +229,19 @@ python -m torch.distributed.launch \
 ```
 
 ### Test pipeline
+
 ![Alt text](image/test_pipeline.png)
+
+### Visualization pipeline
+
+- let us setting visualization data path in visualize_detection_results.py
+- run visualization script
+
+```python
+python tools/visualize_detection_results.py
+```
 
 ## Citations
 
 Please consider citing our paper and FOCS in your publications if the project helps your research. BibTeX reference is
 as follows.
-
-```
-@article{chang2020spatial,
-  title={Spatial Attention fusion for obstacle detection using mmwave radar and vision sensor},
-  author={Chang, Shuo and Zhang, Yifan and Zhang, Fan and Zhao, Xiaotong and Huang, Sai and Feng, Zhiyong and Wei, Zhiqing},
-  journal={Sensors},
-  volume={20},
-  number={4},
-  pages={956},
-  year={2020},
-  publisher={Multidisciplinary Digital Publishing Institute}
-}
-@inproceedings{tian2019fcos,
-  title   =  {{FCOS}: Fully Convolutional One-Stage Object Detection},
-  author  =  {Tian, Zhi and Shen, Chunhua and Chen, Hao and He, Tong},
-  booktitle =  {Proc. Int. Conf. Computer Vision (ICCV)},
-  year    =  {2019}
-}
-```
