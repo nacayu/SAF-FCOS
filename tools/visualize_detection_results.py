@@ -87,6 +87,7 @@ def vis_one_image(im, im_name, output_dir, boxes, thresh=0.508, dpi=200, box_alp
 
 
 def run(dic):
+    # your nuscenes data path
     img = cv2.imread(os.path.join('/home/naca/Data/nuScenes', dic["file_name"]), cv2.IMREAD_COLOR)[:, :, ::-1]
     basename = os.path.splitext(os.path.basename(dic["file_name"]))[0]
     image_id = dic['id']
@@ -99,20 +100,22 @@ def run(dic):
         item.append(score)
         cls_box_i.append(item)
     cls_box_i = np.asarray(cls_box_i)
-    vis_one_image(img, basename, '/home/citybuster/Projects/FCOS/' + config_name, cls_box_i)
+    # your saf-fcos project path
+    vis_one_image(img, basename, '/home/naca/Projects/00_class_project/SAF-FCOS/' + config_name, cls_box_i)
 
 
 if __name__ == "__main__":
 
     config_name = 'fcos_imprv_R_50_FPN_1x_IMG'
-    json_file_path = '/home/citybuster/Projects/FCOS/training_dir/fcos_imprv_R_50_FPN_1x_IMG/inference-model_0090000.pth/nuscenes_test_cocostyle/bbox.json'
+    # after run test_net.py, we could get bbox.json
+    json_file_path = '/home/naca/Projects/00_class_project/SAF-FCOS/inference-model_0040000.pth/nuscenes_test_cocostyle/bbox.json'
     with open(json_file_path, "r") as f:
         predictions = json.load(f)
     pred_by_image = defaultdict(list)
     for p in predictions:
         pred_by_image[p["image_id"]].append(p)
-
-    with open('/home/citybuster/Data/nuScenes/v1.0-trainval/gt_fcos_coco_test_v2.json', 'r') as f:
+    # change your path to gt_fcos_coco_val.json
+    with open('/home/naca/Data/nuScenes/v1.0-trainval/gt_fcos_coco_val.json', 'r') as f:
         dicts = json.load(f)
         dicts = dicts['images']
 
